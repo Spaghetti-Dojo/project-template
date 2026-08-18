@@ -36,7 +36,7 @@ sources/server/
 
 declare(strict_types=1);
 
-namespace SpaghettiDojo\Tosuto\PackageName;
+namespace {{VENDOR_NAMESPACE}}\{{PLUGIN_NAMESPACE}}\PackageName;
 
 use Inpsyde\Modularity\Module\ExecutableModule;
 use Inpsyde\Modularity\Module\ModuleClassNameIdTrait;
@@ -110,7 +110,7 @@ All feature classes must follow these patterns:
 
 declare(strict_types=1);
 
-namespace SpaghettiDojo\Tosuto\PackageName;
+namespace {{VENDOR_NAMESPACE}}\{{PLUGIN_NAMESPACE}}\PackageName;
 
 final readonly class FeatureClass
 {
