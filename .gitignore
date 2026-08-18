@@ -1,0 +1,55 @@
+# AI
+.sisyphus
+
+# Node
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# Build
+/dist/
+/build/
+*.map
+
+# IDE
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+
+# Environment
+.env
+.env.local
+
+# Compiled
+*.css.map
+*.js.map
+
+# Package manager
+package-lock.json
+yarn.lock
+
+# Composer
+/vendor/
+
+# WordPress Environment
+/.wordpress-org/
+/.wp-env/
+
+# Testing
+artifacts/
+/coverage/
+/.phpunit.cache/
+coverage.xml
+
+# Temporary files
+*.tmp
+*.swp
+*.swo
+*~

@@ -1,0 +1,9 @@
+parameters:
+	level: 9
+	paths:
+		- sources
+	scanFiles:
+		- vendor/inpsyde/wp-stubs/stubs/latest.php
+	treatPhpDocTypesAsCertain: false
+includes:
+	- vendor/bnf/phpstan-psr-container/extension.neon

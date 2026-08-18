@@ -1,0 +1,19 @@
+{
+	"extends": [
+		"@wordpress/stylelint-config/scss",
+		"stylelint-plugin-logical-css/configs/recommended"
+	],
+	"rules": {
+		"selector-class-pattern": null,
+		"logical-css/require-logical-properties": [true, { "fix": true, "severity": "error" }],
+		"logical-css/require-logical-keywords": [
+			true,
+			{
+				"fix": true,
+				"ignore": ["caption-side", "offset-anchor", "offset-position"],
+				"severity": "error"
+			}
+		],
+		"logical-css/require-logical-units": [true, { "fix": true, "severity": "error" }]
+	}
+}

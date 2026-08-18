@@ -1,0 +1,10 @@
+.*
+/.github/
+/vendor
+/node_modules
+/build/
+/dist/
+*.config.js
+*.config.ts
+.prettierrc.js
+/bin/

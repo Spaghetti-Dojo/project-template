@@ -1,0 +1,23 @@
+{
+	"core": "./vendor/roots/wordpress-no-content",
+	"phpVersion": "8.4",
+	"themes": [
+		"https://downloads.wordpress.org/theme/twentytwentyfive.1.4.zip"
+	],
+	"plugins": [
+		".",
+		"https://downloads.wordpress.org/plugin/query-monitor.3.16.4.zip"
+	],
+	"mappings": {
+		"wp-content/mu-plugins": "./tests/e2e/mu-plugins"
+	},
+	"port": 8877,
+	"testsPort": 8878,
+	"config": {
+		"WP_DEBUG": true,
+		"WP_ENVIRONMENT_TYPE": "local",
+		"WP_DEBUG_LOG": true,
+		"WP_DEBUG_DISPLAY": false,
+		"WP_DISABLE_FATAL_ERROR_HANDLER": true
+	}
+}

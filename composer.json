@@ -1,0 +1,72 @@
+{
+	"name": "{{COMPOSER_NAME}}",
+	"description": "{{PLUGIN_DESCRIPTION}}",
+	"type": "wordpress-plugin",
+	"license": "GPL-2.0-or-later",
+	"minimum-stability": "dev",
+	"prefer-stable": true,
+	"authors": [
+		{
+			"name": "{{AUTHOR_NAME}}",
+			"email": "{{AUTHOR_EMAIL}}"
+		}
+	],
+	"require": {
+		"php": ">=8.4",
+		"inpsyde/modularity": "^1.7"
+	},
+	"require-dev": {
+		"automattic/wordbless": "^0.6.0",
+		"bnf/phpstan-psr-container": "^1.0",
+		"brain/monkey": "^2.6",
+		"inpsyde/wp-stubs": "dev-main",
+		"mockery/mockery": "^1.6",
+		"pestphp/pest": "^v4.3.0",
+		"phpstan/phpstan": "^2.1",
+		"roots/wordpress-no-content": "6.9",
+		"syde/phpcs": "^1.0"
+	},
+	"autoload": {
+		"psr-4": {
+			"{{VENDOR_NAMESPACE}}\\{{PLUGIN_NAMESPACE}}\\": "sources/server/"
+		}
+	},
+	"autoload-dev": {
+		"psr-4": {
+			"{{VENDOR_NAMESPACE}}\\{{PLUGIN_NAMESPACE}}\\Tests\\": "tests/",
+			"{{VENDOR_NAMESPACE}}\\{{PLUGIN_NAMESPACE}}\\Tests\\Unit\\": "tests/unit/server/",
+			"{{VENDOR_NAMESPACE}}\\{{PLUGIN_NAMESPACE}}\\Tests\\Integration\\": "tests/integration/server/"
+		}
+	},
+	"scripts": {
+		"cs": "phpcs",
+		"cs:fix": "phpcbf",
+		"analysis": "./vendor/bin/phpstan analyse --memory-limit=512M",
+		"test:unit": "@php ./vendor/bin/pest --testsuite=unit",
+		"test:integration": "@php ./vendor/bin/pest --testsuite=integration",
+		"test:unit:coverage": "@php ./vendor/bin/pest --testsuite=unit --coverage --coverage-clover=coverage-unit.xml",
+		"test:integration:coverage": "@php ./vendor/bin/pest --testsuite=integration --coverage --coverage-clover=coverage-integration.xml",
+		"tests": [
+			"@test:unit",
+			"@test:integration"
+		],
+		"qa": [
+			"@cs",
+			"@analysis",
+			"@tests"
+		],
+		"post-install-cmd": "{{VENDOR_NAMESPACE}}\\{{PLUGIN_NAMESPACE}}\\Tests\\InstallWpDropIn::copy",
+		"post-update-cmd": "{{VENDOR_NAMESPACE}}\\{{PLUGIN_NAMESPACE}}\\Tests\\InstallWpDropIn::copy"
+	},
+	"config": {
+		"allow-plugins": {
+			"dealerdirect/phpcodesniffer-composer-installer": true,
+			"pestphp/pest-plugin": true,
+			"roots/wordpress-core-installer": false
+		},
+		"sort-packages": true,
+		"optimize-autoloader": true,
+		"classmap-authoritative": false,
+		"apcu-autoloader": false
+	}
+}

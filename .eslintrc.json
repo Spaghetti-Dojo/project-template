@@ -1,0 +1,124 @@
+{
+	"env": {
+		"browser": true,
+		"es2024": true
+	},
+	"extends": [ "plugin:@wordpress/eslint-plugin/recommended" ],
+	"parser": "@typescript-eslint/parser",
+	"settings": {
+		"import/resolver": "typescript"
+	},
+	"parserOptions": {
+		"project": true,
+		"ecmaVersion": "latest",
+		"sourceType": "module",
+		"tsconfigRootDir": "./"
+	},
+	"rules": {
+		"consistent-return": "off",
+		"dot-notation": "off",
+		"init-declarations": "off",
+		"max-params": "off",
+		"no-throw-literal": "off",
+		"no-useless-constructor": "off",
+		"prefer-promise-reject-errors": "off",
+		"no-return-await": "off",
+		"no-undef-init": "error",
+		"no-implicit-globals": "error",
+		"max-depth": [ "error", 2 ],
+		"max-lines": [
+			"error",
+			{ "max": 300, "skipBlankLines": false, "skipComments": false }
+		],
+		"max-statements-per-line": [ "error", { "max": 1 } ],
+		"complexity": [ "error", 5 ],
+		"max-lines-per-function": [ "error", 25 ],
+		"max-nested-callbacks": [ "error", 2 ],
+		"no-multiple-empty-lines": [
+			"error",
+			{ "max": 1, "maxEOF": 1, "maxBOF": 0 }
+		],
+		"max-classes-per-file": [ "error", 1 ],
+		"@typescript-eslint/consistent-indexed-object-style": "warn",
+		"@typescript-eslint/prefer-literal-enum-member": "warn",
+		"@typescript-eslint/prefer-string-starts-ends-with": "warn",
+		"@typescript-eslint/prefer-includes": "error",
+		"@typescript-eslint/prefer-for-of": "error",
+		"@typescript-eslint/prefer-function-type": "error",
+		"@typescript-eslint/no-useless-template-literals": "error",
+		"@typescript-eslint/prefer-find": "error",
+		"@typescript-eslint/non-nullable-type-assertion-style": "error",
+		"@typescript-eslint/no-useless-constructor": "error",
+		"@typescript-eslint/no-useless-empty-export": "error",
+		"@typescript-eslint/no-unsafe-unary-minus": "error",
+		"@typescript-eslint/prefer-promise-reject-errors": "error",
+		"@typescript-eslint/prefer-readonly": "error",
+		"@typescript-eslint/prefer-readonly-parameter-types": [
+			"warn",
+			{
+				"allow": [
+					{
+						"from": "lib",
+						"name": "Readonly"
+					}
+				]
+			}
+		],
+		"@typescript-eslint/prefer-reduce-type-parameter": "error",
+		"@typescript-eslint/explicit-function-return-type": "error",
+		"@typescript-eslint/explicit-module-boundary-types": "error",
+		"@typescript-eslint/dot-notation": "error",
+		"@typescript-eslint/no-array-delete": "error",
+		"@typescript-eslint/no-dynamic-delete": "error",
+		"@typescript-eslint/no-confusing-void-expression": "error",
+		"@typescript-eslint/no-mixed-enums": "error",
+		"@typescript-eslint/prefer-enum-initializers": "error",
+		"@typescript-eslint/no-throw-literal": "error",
+		"@typescript-eslint/no-unnecessary-condition": "error",
+		"@typescript-eslint/prefer-nullish-coalescing": "error",
+		"@typescript-eslint/prefer-optional-chain": "error",
+		"@typescript-eslint/prefer-ts-expect-error": "error",
+		"@typescript-eslint/restrict-plus-operands": "error",
+		"@typescript-eslint/restrict-template-expressions": "error",
+		"@typescript-eslint/return-await": "error",
+		"@typescript-eslint/strict-boolean-expressions": "error",
+		"@typescript-eslint/switch-exhaustiveness-check": "error",
+		"@typescript-eslint/init-declarations": [ "error", "always" ],
+		"@typescript-eslint/consistent-generic-constructors": [
+			"error",
+			"type-annotation"
+		],
+		"@typescript-eslint/array-type": [
+			"warn",
+			{
+				"default": "generic"
+			}
+		],
+		"@typescript-eslint/parameter-properties": [
+			"warn",
+			{
+				"prefer": "parameter-property"
+			}
+		],
+		"@typescript-eslint/max-params": [
+			"error",
+			{
+				"max": 3
+			}
+		],
+		"@typescript-eslint/consistent-type-imports": [
+			"error",
+			{
+				"prefer": "type-imports",
+				"fixStyle": "separate-type-imports"
+			}
+		],
+		"@typescript-eslint/method-signature-style": [ "error", "property" ],
+		"@wordpress/i18n-text-domain": [
+			"error",
+			{
+				"allowedTextDomain": "tosuto"
+			}
+		]
+	}
+}

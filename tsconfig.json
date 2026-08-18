@@ -1,0 +1,31 @@
+{
+	"compilerOptions": {
+		"target": "ES2024",
+		"module": "ESNext",
+		"ignoreDeprecations": "6.0",
+		"moduleResolution": "bundler",
+		"checkJs": false,
+		"allowJs": false,
+		"exactOptionalPropertyTypes": true,
+		"noFallthroughCasesInSwitch": true,
+		"noImplicitOverride": true,
+		"noImplicitReturns": true,
+		"noPropertyAccessFromIndexSignature": true,
+		"noUncheckedIndexedAccess": true,
+		"noUnusedLocals": true,
+		"noUnusedParameters": true,
+		"strict": true,
+		"resolveJsonModule": true,
+		"sourceMap": true,
+		"jsx": "react-jsx",
+		"skipLibCheck": true,
+		"esModuleInterop": true,
+		"isolatedModules": true,
+		"verbatimModuleSyntax": true,
+		"baseUrl": ".",
+		"typeRoots": [ "./node_modules/@types" ],
+		"rootDir": "./"
+	},
+	"include": [ "./sources" ],
+	"exclude": [ "node_modules" ]
+}

@@ -1,0 +1,19 @@
+# Browsers
+# Support only the latest 2 versions of modern browsers from 2025 onwards
+# This ensures cutting-edge CSS and JavaScript features are available
+
+last 2 Chrome versions
+last 2 Firefox versions
+last 2 Safari versions
+last 2 Edge versions
+
+# Explicitly exclude older browsers
+not IE 11
+not dead
+not op_mini all
+
+# Minimum browser versions (modern but WordPress-friendly)
+Chrome >= 110
+Firefox >= 115
+Safari >= 16
+Edge >= 110
