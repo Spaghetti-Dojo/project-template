@@ -1,0 +1,28 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "{{PLUGIN_SLUG}}/example",
+	"version": "0.1.0",
+	"title": "{{PLUGIN_NAME}} Example",
+	"category": "widgets",
+	"description": "An example dynamic block driven by the Interactivity API.",
+	"textdomain": "{{TEXT_DOMAIN}}",
+	"supports": {
+		"html": false,
+		"interactivity": true
+	},
+	"attributes": {
+		"label": {
+			"type": "string",
+			"default": "Count"
+		},
+		"start": {
+			"type": "number",
+			"default": 0
+		}
+	},
+	"editorScript": "file:./index.js",
+	"viewScriptModule": "file:./view.js",
+	"style": "file:./style-index.css",
+	"render": "file:../../sources/server/Example/render.php"
+}

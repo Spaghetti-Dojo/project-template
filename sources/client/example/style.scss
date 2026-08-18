@@ -1,0 +1,21 @@
+@use "../styles/mixins/units" as units;
+
+.wp-block-{{PLUGIN_SLUG}}-example {
+	display: flex;
+	flex-direction: column;
+	gap: units.rem(8);
+	align-items: flex-start;
+
+	.{{PLUGIN_SLUG}}-example__label {
+		display: flex;
+		gap: units.rem(4);
+		margin: 0;
+		font-weight: 600;
+	}
+
+	.{{PLUGIN_SLUG}}-example__button {
+		padding-block: units.rem(6);
+		padding-inline: units.rem(12);
+		cursor: pointer;
+	}
+}

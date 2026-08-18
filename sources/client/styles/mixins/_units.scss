@@ -1,0 +1,35 @@
+@use "sass:math";
+
+$browser-context: 16;
+
+/*
+ * Convert pixels to ems.
+ */
+@function em($pixels, $context: $browser-context) {
+
+	@if (math.is-unitless($pixels)) {
+		$pixels: $pixels * 1px;
+	}
+
+	@if (math.is-unitless($context)) {
+		$context: $context * 1px;
+	}
+
+	@return math.div($pixels, $context) * 1em;
+}
+
+/*
+ * Convert pixels to rems.
+ */
+@function rem($pixels, $context: $browser-context) {
+
+	@if (math.is-unitless($pixels)) {
+		$pixels: $pixels * 1px;
+	}
+
+	@if (math.is-unitless($context)) {
+		$context: $context * 1px;
+	}
+
+	@return math.div($pixels, $context) * 1rem;
+}
