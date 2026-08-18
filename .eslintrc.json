@@ -117,7 +117,7 @@
 		"@wordpress/i18n-text-domain": [
 			"error",
 			{
-				"allowedTextDomain": "tosuto"
+				"allowedTextDomain": "{{TEXT_DOMAIN}}"
 			}
 		]
 	}

@@ -33,8 +33,16 @@ The tokens are:
 | `{{GITHUB_REPO}}` | my-plugin |
 | `{{CODEOWNER}}` | @widoz |
 
-The template ships one example block. Remove `sources/server/Example/`,
-`sources/client/example/` and the matching tests when you do not need it.
+The template ships one example block. The block has `inserter: false`, so it
+does not appear in the editor. It renders on the front end through
+`do_blocks()` or through a template. See
+`tests/e2e/mu-plugins/example-test-helper.php`.
+
+Remove `sources/server/Example/`, `sources/client/example/` and the matching
+tests when you do not need the example.
+
+The `.claude/commands/opsx` commands need OpenSpec. Run `openspec init` if you
+want to use them.
 
 ## Requirements
 

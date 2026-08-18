@@ -8,8 +8,13 @@ declare(strict_types=1);
  * @var array<string, mixed> $attributes
  */
 
-$label = (string) ($attributes['label'] ?? __('Count', '{{TEXT_DOMAIN}}'));
-$start = (int) ($attributes['start'] ?? 0);
+$labelAttribute = $attributes['label'] ?? null;
+$label = is_string($labelAttribute) && $labelAttribute !== ''
+    ? $labelAttribute
+    : __('Count', '{{TEXT_DOMAIN}}');
+
+$startAttribute = $attributes['start'] ?? null;
+$start = is_int($startAttribute) ? $startAttribute : 0;
 ?>
 <div
     <?= wp_kses_data(get_block_wrapper_attributes()) ?>

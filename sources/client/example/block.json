@@ -9,7 +9,8 @@
 	"textdomain": "{{TEXT_DOMAIN}}",
 	"supports": {
 		"html": false,
-		"interactivity": true
+		"interactivity": true,
+		"inserter": false
 	},
 	"attributes": {
 		"label": {
@@ -21,8 +22,7 @@
 			"default": 0
 		}
 	},
-	"editorScript": "file:./index.js",
 	"viewScriptModule": "file:./view.js",
-	"style": "file:./style-index.css",
+	"style": "file:./style-view.css",
 	"render": "file:../../sources/server/Example/render.php"
 }

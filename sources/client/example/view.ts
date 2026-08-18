@@ -2,6 +2,8 @@ import { store, getContext } from '@wordpress/interactivity';
 
 import type { ExampleContext } from './types';
 
+import './style.scss';
+
 store( '{{PLUGIN_SLUG}}', {
 	actions: {
 		increment(): void {

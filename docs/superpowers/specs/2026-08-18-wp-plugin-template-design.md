@@ -29,7 +29,7 @@ output, lock files or vendor directories.
 bin/init.mjs                    token replacement, removes itself
 sources/
   server/Example/{Module.php,BlockRegistrar.php,render.php}
-  client/example/{block.json,view.ts,style.scss}
+  client/example/{block.json,view.ts,types.ts,style.scss}
   client/styles/mixins/_units.scss
 tests/
   {Pest.php,WpTestCase.php,WpLoad.php,InstallWpDropIn.php}
@@ -87,6 +87,11 @@ The `Example` server module registers one dynamic block,
 `{{PLUGIN_SLUG}}/example`. The block renders through
 `sources/server/Example/render.php`. The client side has one Interactivity
 API store in `view.ts` and one `style.scss`.
+
+The block has no editor script. `@wordpress/blocks` and
+`@wordpress/block-editor` ship no TypeScript types, and the template runs
+`tsc --noEmit` in CI. The block therefore uses `inserter: false`, as `tosuto`
+does. It renders through `do_blocks()` or through a template.
 
 The example gives each QA command real input:
 
