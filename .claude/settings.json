@@ -1,0 +1,17 @@
+{
+	"permissions": {
+		"allow": ["Bash"]
+	},
+	"hooks": {
+		"Stop": [
+			{
+				"hooks": [
+					{
+						"type": "command",
+						"command": "bash .claude/hooks/qa.sh"
+					}
+				]
+			}
+		]
+	}
+}
