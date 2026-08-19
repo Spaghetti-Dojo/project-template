@@ -28,13 +28,14 @@ output, lock files or vendor directories.
   workflows/{qa.yml,lint.yml,e2e.yml}
 bin/init.mjs                    token replacement, removes itself
 sources/
+  package.php                   the package() factory, the public entry point
   server/Example/{Module.php,BlockRegistrar.php,render.php}
   client/example/{block.json,view.ts,types.ts,style.scss}
   client/styles/mixins/_units.scss
 tests/
   {Pest.php,WpTestCase.php,WpLoad.php,InstallWpDropIn.php}
   unit/server/ExampleModuleTest.php
-  integration/server/BlockRegistrationTest.php
+  integration/server/{BlockRegistrarTest.php,PackageTest.php}
   e2e/{specs/example.spec.ts,mu-plugins/example-test-helper.php,tsconfig.json}
 {{PLUGIN_SLUG}}.php             plugin bootstrap
 composer.json package.json .wp-env.json
@@ -98,6 +99,17 @@ The example gives each QA command real input:
 - one unit test for the module,
 - one integration test for the block registration,
 - one Playwright spec for the rendered block.
+
+## Public entry point
+
+`sources/package.php` declares the function `package()` in the namespace of
+the plugin. The function builds the `Inpsyde\Modularity\Package` once and
+returns the same instance on every call. Composer loads the file through the
+`autoload.files` entry.
+
+The plugin bootstrap calls `package()`, adds the `Example` module, and boots
+the package on `plugins_loaded`. A third party can call `package()` to add its
+own module or to read the container.
 
 ## CI
 

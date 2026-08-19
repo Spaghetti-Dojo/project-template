@@ -29,7 +29,10 @@
 	"autoload": {
 		"psr-4": {
 			"{{VENDOR_NAMESPACE}}\\{{PLUGIN_NAMESPACE}}\\": "sources/server/"
-		}
+		},
+		"files": [
+			"sources/package.php"
+		]
 	},
 	"autoload-dev": {
 		"psr-4": {

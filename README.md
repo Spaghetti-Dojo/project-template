@@ -85,9 +85,24 @@ The site runs on `http://localhost:8877`.
 | `pnpm lint:types` | TypeScript type check |
 | `pnpm test:e2e` | Playwright end to end tests |
 
+## Extend the plugin
+
+`sources/package.php` exposes the package of the plugin through the
+`package()` function. The function always returns the same instance, so a
+third party can add its own module:
+
+```php
+add_action('plugins_loaded', static function (): void {
+    \{{VENDOR_NAMESPACE}}\{{PLUGIN_NAMESPACE}}\package()->addModule(MyOwn\Module::new());
+}, 5);
+```
+
+Add the module before the priority of the `boot()` call, which is 10.
+
 ## Layout
 
 ```
+sources/package.php The package factory. The public entry point.
 sources/server/     PHP. One directory per module.
 sources/client/     TypeScript and SCSS. One directory per block.
 tests/unit/         Unit tests. Brain Monkey. No WordPress.

@@ -17,18 +17,14 @@ declare(strict_types=1);
 
 namespace {{VENDOR_NAMESPACE}}\{{PLUGIN_NAMESPACE}};
 
-use Inpsyde\Modularity\Package;
-use Inpsyde\Modularity\Properties\PluginProperties;
-
 defined('ABSPATH') || exit;
 
 require_once __DIR__ . '/vendor/autoload.php';
 
+$package = package();
+$package->addModule(Example\Module::new());
+
 add_action(
     'plugins_loaded',
-    static function (): void {
-        Package::new(PluginProperties::new(__FILE__))
-            ->addModule(Example\Module::new())
-            ->boot();
-    }
+    static fn(): bool => $package->boot()
 );
