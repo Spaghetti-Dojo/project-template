@@ -7,7 +7,8 @@
 ## Project Layout
 
 - `sources/server/` — PHP, namespace `{{VENDOR_NAMESPACE}}\{{PLUGIN_NAMESPACE}}`, one directory per module.
-- `sources/client/` — TypeScript and SCSS. One directory per block.
+- `sources/client/blocks/` — TypeScript and SCSS. One directory per block.
+- `sources/server/Blocks/` — the block module, the registrar and the render templates.
 - `tests/unit/server/`, `tests/integration/server/` — Pest tests.
 - `tests/e2e/specs/` — Playwright specs.
 - `build/` — generated. Never edit it by hand.

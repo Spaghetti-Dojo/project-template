@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace {{VENDOR_NAMESPACE}}\{{PLUGIN_NAMESPACE}}\Example;
+namespace {{VENDOR_NAMESPACE}}\{{PLUGIN_NAMESPACE}}\Blocks;
 
 use Inpsyde\Modularity\Module\ExecutableModule;
 use Inpsyde\Modularity\Module\ModuleClassNameIdTrait;

@@ -19,12 +19,22 @@ namespace {{VENDOR_NAMESPACE}}\{{PLUGIN_NAMESPACE}};
 
 defined('ABSPATH') || exit;
 
-require_once __DIR__ . '/vendor/autoload.php';
+function autoload(string $projectRoot): void
+{
+    $autoloadFile = "{$projectRoot}/vendor/autoload.php";
+    if (!\is_readable($autoloadFile)) {
+        return;
+    }
+    require_once $autoloadFile;
+}
 
-$package = package();
-$package->addModule(Example\Module::new());
+autoload(__DIR__);
 
 add_action(
     'plugins_loaded',
-    static fn(): bool => $package->boot()
+    static function (): void {
+        package()
+            ->addModule(Blocks\Module::new())
+            ->boot();
+    }
 );

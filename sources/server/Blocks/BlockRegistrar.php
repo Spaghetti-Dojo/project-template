@@ -2,10 +2,13 @@
 
 declare(strict_types=1);
 
-namespace {{VENDOR_NAMESPACE}}\{{PLUGIN_NAMESPACE}}\Example;
+namespace {{VENDOR_NAMESPACE}}\{{PLUGIN_NAMESPACE}}\Blocks;
 
 /**
  * Registers every block of the build directory through the generated manifest.
+ *
+ * The manifest keys are the directory names of the blocks, so the collection
+ * path must be the parent directory of the blocks, not the build directory.
  *
  * @internal
  */
@@ -28,14 +31,13 @@ final readonly class BlockRegistrar
     private function register(): void
     {
         $buildDir = dirname(__DIR__, 3) . '/build';
+        $blocksDir = $buildDir . '/blocks';
+        $manifest = $buildDir . '/blocks-manifest.php';
 
-        if (!is_dir($buildDir)) {
+        if (!is_dir($blocksDir) || !is_readable($manifest)) {
             return;
         }
 
-        wp_register_block_types_from_metadata_collection(
-            $buildDir,
-            $buildDir . '/blocks-manifest.php'
-        );
+        wp_register_block_types_from_metadata_collection($blocksDir, $manifest);
     }
 }

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace {{VENDOR_NAMESPACE}}\{{PLUGIN_NAMESPACE}}\Tests\Integration;
 
-use {{VENDOR_NAMESPACE}}\{{PLUGIN_NAMESPACE}}\Example\BlockRegistrar;
+use {{VENDOR_NAMESPACE}}\{{PLUGIN_NAMESPACE}}\Blocks\BlockRegistrar;
 
 it('hooks the registration into init', function (): void {
     BlockRegistrar::new()->init();

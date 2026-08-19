@@ -29,12 +29,13 @@ output, lock files or vendor directories.
 bin/init.mjs                    token replacement, removes itself
 sources/
   package.php                   the package() factory, the public entry point
-  server/Example/{Module.php,BlockRegistrar.php,render.php}
-  client/example/{block.json,view.ts,types.ts,style.scss}
+  server/Blocks/{Module.php,BlockRegistrar.php}
+  server/Blocks/Example/render.php
+  client/blocks/example/{block.json,view.ts,types.ts,style.scss}
   client/styles/mixins/_units.scss
 tests/
   {Pest.php,WpTestCase.php,WpLoad.php,InstallWpDropIn.php}
-  unit/server/ExampleModuleTest.php
+  unit/server/BlocksModuleTest.php
   integration/server/{BlockRegistrarTest.php,PackageTest.php}
   e2e/{specs/example.spec.ts,mu-plugins/example-test-helper.php,tsconfig.json}
 {{PLUGIN_SLUG}}.php             plugin bootstrap
@@ -84,9 +85,12 @@ The `--dry-run` flag prints the planned changes and writes nothing.
 
 ## Example code
 
-The `Example` server module registers one dynamic block,
-`{{PLUGIN_SLUG}}/example`. The block renders through
-`sources/server/Example/render.php`. The client side has one Interactivity
+The `Blocks` server module is not specific to one block. It registers every
+block of `build/blocks` through the generated manifest. The example block
+renders through `sources/server/Blocks/Example/render.php`.
+
+The manifest keys are the directory names of the blocks. The collection path
+must therefore be `build/blocks`, not `build`. The client side has one Interactivity
 API store in `view.ts` and one `style.scss`.
 
 The block has no editor script. `@wordpress/blocks` and

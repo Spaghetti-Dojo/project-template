@@ -1,4 +1,4 @@
-@use "../styles/mixins/units" as units;
+@use "../../styles/mixins/units" as units;
 
 .wp-block-{{PLUGIN_SLUG}}-example {
 	display: flex;

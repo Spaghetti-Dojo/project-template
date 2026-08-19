@@ -7,7 +7,7 @@ namespace {{VENDOR_NAMESPACE}}\{{PLUGIN_NAMESPACE}}\Tests\Unit;
 use Brain\Monkey\Functions;
 use Inpsyde\Modularity\Module\ExecutableModule;
 use Psr\Container\ContainerInterface;
-use {{VENDOR_NAMESPACE}}\{{PLUGIN_NAMESPACE}}\Example\Module;
+use {{VENDOR_NAMESPACE}}\{{PLUGIN_NAMESPACE}}\Blocks\Module;
 
 it('is an executable module', function (): void {
     expect(Module::new())->toBeInstanceOf(ExecutableModule::class);

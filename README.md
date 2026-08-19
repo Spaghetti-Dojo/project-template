@@ -38,8 +38,13 @@ does not appear in the editor. It renders on the front end through
 `do_blocks()` or through a template. See
 `tests/e2e/mu-plugins/example-test-helper.php`.
 
-Remove `sources/server/Example/`, `sources/client/example/` and the matching
-tests when you do not need the example.
+To add a block, create `sources/client/blocks/<name>/` with a `block.json`,
+and put the render template in `sources/server/Blocks/<Name>/render.php`. The
+`Blocks` module registers every block of the build directory, so you do not
+need to change any PHP.
+
+Remove `sources/server/Blocks/Example/`, `sources/client/blocks/example/` and
+the matching tests when you do not need the example.
 
 The `.claude/commands/opsx` commands need OpenSpec. Run `openspec init` if you
 want to use them.
@@ -102,13 +107,15 @@ Add the module before the priority of the `boot()` call, which is 10.
 ## Layout
 
 ```
-sources/package.php The package factory. The public entry point.
-sources/server/     PHP. One directory per module.
-sources/client/     TypeScript and SCSS. One directory per block.
-tests/unit/         Unit tests. Brain Monkey. No WordPress.
-tests/integration/  Integration tests. Real WordPress on SQLite.
-tests/e2e/          Playwright specs and the mu-plugin helper.
-build/              Generated. Never edit it by hand.
+sources/package.php        The package factory. The public entry point.
+sources/server/            PHP. One directory per module.
+sources/server/Blocks/     The block module and the render templates.
+sources/client/blocks/     One directory per block. TypeScript and SCSS.
+sources/client/styles/     Shared SCSS.
+tests/unit/                Unit tests. Brain Monkey. No WordPress.
+tests/integration/         Integration tests. Real WordPress on SQLite.
+tests/e2e/                 Playwright specs and the mu-plugin helper.
+build/                     Generated. Never edit it by hand.
 ```
 
 ## License
