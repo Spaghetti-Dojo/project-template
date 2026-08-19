@@ -1,25 +1,9 @@
-# Router decision tree (v1)
+# Router decision tree
 
-This is a lightweight routing guide. It assumes you can run `wp-project-triage` first.
+This project is one WordPress plugin. There is no repo kind to classify.
+Route by the intent of the request.
 
-## Step 1: classify repo kind (from triage)
-
-Use `triage.project.kind` and the strongest signals:
-
-- `wp-core` → treat as WordPress core checkout work (core patches, PHPUnit, build tools).
-- `wp-site` → treat as a full site repo (wp-content present; changes might be theme + plugins).
-- `wp-block-theme` → theme.json/templates/patterns workflows.
-- `wp-theme` → classic theme workflows (templates PHP, `functions.php`, `style.css`).
-- `wp-block-plugin` → Gutenberg block development in a plugin (block.json, build pipeline).
-- `wp-plugin` / `wp-mu-plugin` → plugin workflows (hooks, admin, settings, cron, REST, security).
-- `gutenberg` → Gutenberg monorepo workflows (packages, tooling, docs).
-
-If multiple kinds match, prefer the most specific:
-`gutenberg` > `wp-core` > `wp-site` > `wp-block-theme` > `wp-block-plugin` > `wp-theme` > `wp-plugin`.
-
-## Step 2: route by user intent (keywords)
-
-Route by intent even if repo kind is broad (like `wp-site`):
+## Route by user intent (keywords)
 
 - **Interactivity API / data-wp-* directives / @wordpress/interactivity / viewScriptModule**
   - Route → `wp-interactivity-api`.
@@ -33,18 +17,16 @@ Route by intent even if repo kind is broad (like `wp-site`):
   - Route → `wp-rest-api`.
 - **WP-CLI / wp-cli.yml / commands**
   - Route → `wp-wpcli-and-ops`.
-- **Build tooling / @wordpress/scripts / webpack / Vite / npm scripts**
-  - Route → `wp-build-tooling` (planned).
-- **Testing / PHPUnit / wp-env / Playwright**
-  - Route → `wp-testing` (planned).
+- **Build tooling / @wordpress/scripts / pnpm scripts / wp-env / Playwright**
+  - Route → `wp-block-development`, file `references/tooling-and-testing.md`.
 - **PHPStan / static analysis / phpstan.neon / phpstan-baseline.neon**
   - Route → `wp-phpstan`.
 - **Performance / caching / query profiling / editor slowness**
   - Route → `wp-performance`.
 - **Security / nonces / capabilities / sanitization/escaping / uploads**
-  - Route → `wp-security` (planned).
+  - Route → `wp-plugin-development`.
 
-## Step 3: guardrails checklist (always)
+## Guardrails (always)
 
 - This project is a plugin. It uses Composer and pnpm. Never suggest npm or npx.
 - Prefer existing lint/test scripts if present.

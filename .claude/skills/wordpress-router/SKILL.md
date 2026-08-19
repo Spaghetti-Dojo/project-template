@@ -1,6 +1,6 @@
 ---
 name: wordpress-router
-description: "Use when the user asks about this WordPress plugin codebase and you need to route to the correct workflow/skill (blocks, REST API, WP-CLI, performance, security, testing, release packaging)."
+description: "Use at the start of a WordPress task in this plugin to pick the right domain skill and guardrails: blocks, Interactivity API, REST API, WP-CLI, PHPStan, performance, security, build and tests."
 ---
 
 # WordPress Router
@@ -15,36 +15,27 @@ Use this skill at the start of most WordPress tasks to:
 
 ## Inputs required
 
-- Repo root (current working directory).
-- The user’s intent (what they want changed) and any constraints (WP version targets, WP.com specifics, release requirements).
+- The intent of the user, and any constraint on the target WordPress or PHP
+  version.
 
 ## Procedure
 
-1. Run the project triage script:
-   - `node skills/wp-project-triage/scripts/detect_wp_project.mjs`
-2. Read the triage output and classify:
-   - primary project kind(s),
-   - tooling available (PHP/Composer, Node, @wordpress/scripts),
-   - tests present (PHPUnit, Playwright, wp-env),
-   - any version hints.
-3. Route to domain workflows based on user intent + repo kind:
-   - For the decision tree, read: `skills/wordpress-router/references/decision-tree.md`.
-4. Apply guardrails before making changes:
-   - Confirm any version constraints if unclear.
-   - Prefer the repo’s existing tooling and conventions for builds/tests.
+1. Locate the target in the layout:
+   - `sources/package.php` — the package factory, the public entry point.
+   - `sources/server/` — one directory per module.
+   - `sources/client/blocks/` — one directory per block. It holds every file
+     of the block.
+   - `tests/unit/`, `tests/integration/`, `tests/e2e/`.
+2. Route by intent. Read:
+   - `skills/wordpress-router/references/decision-tree.md`
+3. Apply the guardrails of the decision tree before you change anything.
 
 ## Verification
 
-- Re-run the triage script if you create or restructure significant files.
-- Run the repo’s lint/test/build commands that the triage output recommends (if available).
-
-## Failure modes / debugging
-
-- If triage reports `kind: unknown`, inspect:
-  - root `composer.json`, `package.json`, `style.css`, `block.json`, `theme.json`, `wp-content/`.
-- If the repo is huge, consider narrowing scanning scope or adding ignore rules to the triage script.
+Run the commands of the domain skill. For the block and the build commands,
+read `skills/wp-block-development/references/tooling-and-testing.md`.
 
 ## Escalation
 
-- If routing is ambiguous, ask one question:
-  - “Is this intended to be a WordPress plugin, a theme (classic/block), or a full site repo?”
+If the intent stays ambiguous, ask one question. Name the two most likely
+targets, and let the user pick.

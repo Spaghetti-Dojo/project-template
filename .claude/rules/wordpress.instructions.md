@@ -1,6 +1,6 @@
 ---
 paths:
-  - "sources/server/**/*.php"
+  - "sources/**/*.php"
 ---
 
 ## WordPress Hooks Naming Convention

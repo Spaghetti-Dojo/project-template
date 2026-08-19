@@ -18,7 +18,7 @@ run_step() {
 }
 
 # PHP: fix then check
-if find sources/server -name '*.php' -print -quit 2>/dev/null | grep -q .; then
+if find sources -name '*.php' -print -quit 2>/dev/null | grep -q .; then
   run_step "php:cs:fix"   composer cs:fix
   run_step "php:cs"       composer cs
   run_step "php:analysis" composer analysis
