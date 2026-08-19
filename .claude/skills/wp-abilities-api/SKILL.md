@@ -16,9 +16,8 @@ Use this skill when the task involves:
 
 ## Inputs required
 
-- Repo root (run `wp-project-triage` first if you haven’t).
-- Target WordPress version(s) and whether this is WP core or a plugin/theme.
-- Where the change should live (plugin vs theme vs mu-plugin).
+- Target WordPress version(s).
+- The module under `sources/server/` where the change should live.
 
 ## Procedure
 
@@ -69,7 +68,6 @@ Use the documented init hooks for Abilities API registration so they load at the
 
 ## Verification
 
-- `wp-project-triage` indicates `signals.usesAbilitiesApi: true` after your change (if applicable).
 - REST check (in a WP environment): endpoints under `wp-abilities/v1` return your ability and category when expected.
 - If the repo has tests, add/update coverage near:
   - PHP: ability registration and meta exposure

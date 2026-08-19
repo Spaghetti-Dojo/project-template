@@ -24,14 +24,15 @@ Use this skill for plugin work such as:
 
 ## Procedure
 
-### 0) Triage and locate plugin entrypoints
+### 0) Locate the plugin entry points
 
-1. Run triage:
-   - `node .claude/skills/wp-project-triage/scripts/detect_wp_project.mjs`
-2. Detect plugin headers (deterministic scan):
-   - `node .claude/skills/wp-plugin-development/scripts/detect_plugins.mjs`
+- The bootstrap is the file with the plugin header at the repo root.
+- `sources/package.php` builds the package. It is the public entry point.
+- `sources/server/<Name>/Module.php` is the entry point of each module.
 
-If this is a full site repo, pick the specific plugin under `wp-content/plugins/` or `mu-plugins/` before changing code.
+The deterministic scan of the plugin headers:
+
+- `node .claude/skills/wp-plugin-development/scripts/detect_plugins.mjs`
 
 ### 1) Follow a predictable architecture
 

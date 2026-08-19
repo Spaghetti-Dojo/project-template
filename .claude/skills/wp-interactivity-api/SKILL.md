@@ -16,8 +16,7 @@ Use this skill when the user mentions:
 
 ## Inputs required
 
-- Repo root + triage output (`wp-project-triage`).
-- Which block/theme/plugin surfaces are affected (frontend, editor, both).
+- Which block under `sources/client/blocks/` is affected.
 - Any constraints: WP version, whether modules are supported in the build.
 
 ## Procedure
@@ -151,7 +150,6 @@ See `references/debugging.md`.
 
 ## Verification
 
-- `wp-project-triage` indicates `signals.usesInteractivityApi: true` after your change (if applicable).
 - Manual smoke test: directive triggers and state updates as expected.
 - If tests exist: add/extend Playwright E2E around the interaction path.
 

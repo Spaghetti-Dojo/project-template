@@ -25,17 +25,15 @@ Use this skill when you need to:
 
 ## Procedure
 
-### 0) Triage and locate REST usage
+### 0) Locate REST usage
 
-1. Run triage:
-   - `node .claude/skills/wp-project-triage/scripts/detect_wp_project.mjs`
-2. Search for existing REST usage:
+1. Search `sources/server/` for existing REST usage:
    - `register_rest_route`
    - `WP_REST_Controller`
    - `rest_api_init`
    - `show_in_rest`, `rest_base`, `rest_controller_class`
 
-If this is a full site repo, pick the specific plugin/theme before changing code.
+Put a new endpoint in its own module under `sources/server/`.
 
 ### 1) Choose the right approach
 
