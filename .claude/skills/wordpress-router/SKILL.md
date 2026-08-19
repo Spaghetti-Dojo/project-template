@@ -1,6 +1,6 @@
 ---
 name: wordpress-router
-description: "Use when the user asks about WordPress codebases (plugins, themes, block themes, Gutenberg blocks, WP core checkouts) and you need to quickly classify the repo and route to the correct workflow/skill (blocks, theme.json, REST API, WP-CLI, performance, security, testing, release packaging)."
+description: "Use when the user asks about this WordPress plugin codebase and you need to route to the correct workflow/skill (blocks, REST API, WP-CLI, performance, security, testing, release packaging)."
 ---
 
 # WordPress Router
@@ -9,7 +9,7 @@ description: "Use when the user asks about WordPress codebases (plugins, themes,
 
 Use this skill at the start of most WordPress tasks to:
 
-- identify what kind of WordPress codebase this is (plugin vs theme vs block theme vs WP core checkout vs full site),
+- confirm the target of the request inside this plugin,
 - pick the right workflow and guardrails,
 - delegate to the most relevant domain skill(s).
 

@@ -36,9 +36,14 @@ Decide:
 - Is this theme-level interactivity?
 - Is this plugin-side “enhance existing markup” usage?
 
-If you’re creating a new interactive block (not just debugging), prefer the official scaffold template:
+If you are creating a new interactive block, follow the layout of this
+project. Do not scaffold with `@wordpress/create-block`.
 
-- `@wordpress/create-block-interactive-template` (via `@wordpress/create-block`)
+- Create one directory under `sources/client/blocks/`.
+- Put the store in `view.ts` and reference it as `viewScriptModule` in
+  `block.json`.
+- See the skill `wp-block-development`, file
+  `references/creating-new-blocks.md`.
 
 ### 2) Identify the store(s)
 

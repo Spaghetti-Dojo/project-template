@@ -25,12 +25,8 @@ Route by intent even if repo kind is broad (like `wp-site`):
   - Route → `wp-interactivity-api`.
 - **Abilities API / wp_register_ability / wp-abilities/v1 / @wordpress/abilities**
   - Route → `wp-abilities-api`.
-- **Playground / run-blueprint / build-snapshot / @wp-playground/cli / playground.wordpress.net**
-  - Route → `wp-playground`.
 - **Blocks / block.json / registerBlockType / attributes / save serialization**
   - Route → `wp-block-development`.
-- **theme.json / Global Styles / templates/*.html / patterns/**
-  - Route → `wp-block-themes`.
 - **Plugins / hooks / activation hook / uninstall / Settings API / admin pages**
   - Route → `wp-plugin-development`.
 - **REST endpoint / register_rest_route / permission_callback**
@@ -50,6 +46,6 @@ Route by intent even if repo kind is broad (like `wp-site`):
 
 ## Step 3: guardrails checklist (always)
 
-- Verify detected tooling before suggesting commands (Composer vs npm/yarn/pnpm).
+- This project is a plugin. It uses Composer and pnpm. Never suggest npm or npx.
 - Prefer existing lint/test scripts if present.
 - If version constraints aren’t detectable, ask for target WP core and PHP versions.
