@@ -30,8 +30,7 @@ bin/init.mjs                    token replacement, removes itself
 sources/
   package.php                   the package() factory, the public entry point
   server/Blocks/{Module.php,BlockRegistrar.php}
-  server/Blocks/Example/render.php
-  client/blocks/example/{block.json,view.ts,types.ts,style.scss}
+  client/blocks/example/{block.json,render.php,view.ts,types.ts,style.scss}
   client/styles/mixins/_units.scss
 tests/
   {Pest.php,WpTestCase.php,WpLoad.php,InstallWpDropIn.php}
@@ -86,8 +85,9 @@ The `--dry-run` flag prints the planned changes and writes nothing.
 ## Example code
 
 The `Blocks` server module is not specific to one block. It registers every
-block of `build/blocks` through the generated manifest. The example block
-renders through `sources/server/Blocks/Example/render.php`.
+block of `build/blocks` through the generated manifest. Every file of a block lives in one
+directory under `sources/client/blocks/`, the render template included.
+`wp-scripts` copies the template into the build directory.
 
 The manifest keys are the directory names of the blocks. The collection path
 must therefore be `build/blocks`, not `build`. The client side has one Interactivity
