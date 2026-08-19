@@ -8,6 +8,10 @@ use Brain\Monkey;
 
 /*
  * Unit tests run against Brain Monkey. No WordPress is loaded.
+ *
+ * Integration tests run against a real WordPress. The bootstrap file
+ * tests/bootstrap-integration.php installs it and activates this plugin, so
+ * the integration suite needs no setup here.
  */
 uses()
     ->beforeEach(function (): void {
@@ -18,10 +22,3 @@ uses()
         \Mockery::close();
     })
     ->in('unit');
-
-/*
- * Integration tests run against a real WordPress on SQLite, through WorDBless.
- */
-pest()
-    ->extends(WpTestCase::class)
-    ->in('integration');

@@ -1,5 +1,5 @@
 {
-	"core": "./vendor/roots/wordpress-no-content",
+	"core": "./vendor/wordpress/wordpress",
 	"phpVersion": "8.4",
 	"themes": [
 		"https://downloads.wordpress.org/theme/twentytwentyfive.1.4.zip"

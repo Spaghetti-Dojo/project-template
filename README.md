@@ -75,6 +75,25 @@ pnpm start
 
 The site runs on `http://localhost:8877`.
 
+## Tests
+
+Unit tests run on Brain Monkey. No WordPress is loaded.
+
+Integration tests run against a real WordPress, through
+[syde/wp-phpunit-integration](https://github.com/inpsyde/wp-phpunit-integration).
+The bootstrap file installs WordPress into `vendor/wordpress/wordpress`, puts
+it on SQLite, symlinks this plugin into it and activates it. Composer installs
+WordPress, so no other tool is needed.
+
+Run the integration suite against another WordPress version:
+
+```bash
+WP_CORE_VERSION=6.8 composer test:integration
+```
+
+Run `pnpm build` before the integration suite. The block registration test
+reads the build directory, and it skips itself when the directory is absent.
+
 ## Quality assurance
 
 | Command | Purpose |
@@ -83,7 +102,7 @@ The site runs on `http://localhost:8877`.
 | `composer cs:fix` | Fix the PHP coding standards |
 | `composer analysis` | PHPStan, level 9 |
 | `composer test:unit` | Pest unit tests |
-| `composer test:integration` | Pest integration tests on WorDBless |
+| `composer test:integration` | Pest integration tests on a real WordPress |
 | `composer qa` | Coding standards, analysis and tests |
 | `pnpm lint:scripts` | ESLint |
 | `pnpm lint:styles` | Stylelint |
@@ -114,6 +133,7 @@ sources/client/blocks/     One directory per block. All the files of a block.
 sources/client/styles/     Shared SCSS.
 tests/unit/                Unit tests. Brain Monkey. No WordPress.
 tests/integration/         Integration tests. Real WordPress on SQLite.
+tests/bootstrap-integration.php  Installs WordPress for the integration tests.
 tests/e2e/                 Playwright specs and the mu-plugin helper.
 build/                     Generated. Never edit it by hand.
 ```

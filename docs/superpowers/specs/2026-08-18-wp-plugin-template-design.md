@@ -33,13 +33,14 @@ sources/
   client/blocks/example/{block.json,render.php,view.ts,types.ts,style.scss}
   client/styles/mixins/_units.scss
 tests/
-  {Pest.php,WpTestCase.php,WpLoad.php,InstallWpDropIn.php}
+  {Pest.php,bootstrap-integration.php}
   unit/server/BlocksModuleTest.php
-  integration/server/{BlockRegistrarTest.php,PackageTest.php}
+  integration/server/{BlockRegistrationTest.php,PackageTest.php}
   e2e/{specs/example.spec.ts,mu-plugins/example-test-helper.php,tsconfig.json}
 {{PLUGIN_SLUG}}.php             plugin bootstrap
 composer.json package.json .wp-env.json
-phpcs.xml phpstan.neon phpunit.xml tsconfig.json playwright.config.ts
+phpcs.xml phpstan.neon phpunit.xml phpunit-integration.xml
+tsconfig.json playwright.config.ts
 .editorconfig .gitignore .prettierrc.js .prettierignore .eslintrc.json
 .eslintignore .stylelintrc.json .stylelintignore .browserslistrc
 babel.config.js LICENSE README.md
@@ -102,7 +103,27 @@ The example gives each QA command real input:
 
 - one unit test for the module,
 - one integration test for the block registration,
+- one integration test for the package factory,
 - one Playwright spec for the rendered block.
+
+## Test harness
+
+Unit tests run on Brain Monkey.
+
+Integration tests run on a real WordPress, through
+`syde/wp-phpunit-integration`. `tests/bootstrap-integration.php` installs
+WordPress into `vendor/wordpress/wordpress`, puts it on SQLite, symlinks the
+plugin into it and activates it. `phpunit-integration.xml` declares the
+bootstrap, and `composer test:integration` runs Pest with that file.
+
+Composer installs WordPress through `roots/wordpress`, and the root
+`composer.json` declares the wpackagist repository, because
+`syde/wp-phpunit-integration` needs `wpackagist-plugin/sqlite-database-integration`
+and Composer reads repositories only from the root package.
+
+Known limit: on PHP 8.5 the bundled WP-CLI phar prints a deprecation to
+stderr, and the package treats any stderr output as a fatal error. Use PHP
+8.4, which is the version of the CI and of `wp-env`.
 
 ## Public entry point
 
@@ -117,7 +138,9 @@ own module or to read the container.
 
 ## CI
 
-- `qa.yml` — PHP 8.4, `composer cs`, `composer analysis`, `composer tests`.
+- `qa.yml` — PHP 8.4 with `pdo_sqlite`, `pnpm build`, then `composer cs`,
+  `composer analysis` and `composer tests`. The build must run first, because
+  the integration test reads the build directory.
 - `lint.yml` — `pnpm lint:scripts`, `pnpm lint:styles`, `tsc --noEmit`.
 - `e2e.yml` — build, `wp-env start`, Playwright, artifact upload on failure.
 

@@ -16,16 +16,26 @@
 		"inpsyde/modularity": "^1.7"
 	},
 	"require-dev": {
-		"automattic/wordbless": "^0.6.0",
 		"bnf/phpstan-psr-container": "^1.0",
 		"brain/monkey": "^2.6",
 		"inpsyde/wp-stubs": "dev-main",
 		"mockery/mockery": "^1.6",
 		"pestphp/pest": "^v4.3.0",
 		"phpstan/phpstan": "^2.1",
-		"roots/wordpress-no-content": "6.9",
-		"syde/phpcs": "^1.0"
+		"roots/wordpress": "6.9",
+		"syde/phpcs": "^1.0",
+		"syde/wp-phpunit-integration": "^0.4"
 	},
+	"repositories": [
+		{
+			"type": "composer",
+			"url": "https://wpackagist.org",
+			"only": [
+				"wpackagist-plugin/*",
+				"wpackagist-theme/*"
+			]
+		}
+	],
 	"autoload": {
 		"psr-4": {
 			"{{VENDOR_NAMESPACE}}\\{{PLUGIN_NAMESPACE}}\\": "sources/server/"
@@ -46,9 +56,9 @@
 		"cs:fix": "phpcbf",
 		"analysis": "./vendor/bin/phpstan analyse --memory-limit=512M",
 		"test:unit": "@php ./vendor/bin/pest --testsuite=unit",
-		"test:integration": "@php ./vendor/bin/pest --testsuite=integration",
+		"test:integration": "@php ./vendor/bin/pest -c phpunit-integration.xml",
 		"test:unit:coverage": "@php ./vendor/bin/pest --testsuite=unit --coverage --coverage-clover=coverage-unit.xml",
-		"test:integration:coverage": "@php ./vendor/bin/pest --testsuite=integration --coverage --coverage-clover=coverage-integration.xml",
+		"test:integration:coverage": "@php ./vendor/bin/pest -c phpunit-integration.xml --coverage --coverage-clover=coverage-integration.xml",
 		"tests": [
 			"@test:unit",
 			"@test:integration"
@@ -57,19 +67,26 @@
 			"@cs",
 			"@analysis",
 			"@tests"
-		],
-		"post-install-cmd": "{{VENDOR_NAMESPACE}}\\{{PLUGIN_NAMESPACE}}\\Tests\\InstallWpDropIn::copy",
-		"post-update-cmd": "{{VENDOR_NAMESPACE}}\\{{PLUGIN_NAMESPACE}}\\Tests\\InstallWpDropIn::copy"
+		]
 	},
 	"config": {
 		"allow-plugins": {
+			"composer/installers": true,
 			"dealerdirect/phpcodesniffer-composer-installer": true,
 			"pestphp/pest-plugin": true,
-			"roots/wordpress-core-installer": false
+			"roots/wordpress-core-installer": true
 		},
 		"sort-packages": true,
 		"optimize-autoloader": true,
 		"classmap-authoritative": false,
 		"apcu-autoloader": false
+	},
+	"extra": {
+		"wordpress-install-dir": "vendor/wordpress/wordpress",
+		"installer-paths": {
+			"vendor/wordpress/wordpress/wp-content/plugins/{$name}": [
+				"type:wordpress-plugin"
+			]
+		}
 	}
 }

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/10.3/phpunit.xsd"
+	bootstrap="tests/bootstrap-integration.php"
+	colors="true"
+>
+	<testsuites>
+		<testsuite name="integration">
+			<directory suffix="Test.php">./tests/integration/server</directory>
+		</testsuite>
+	</testsuites>
+
+	<source>
+		<include>
+			<directory suffix=".php">./sources/server</directory>
+			<file>./sources/package.php</file>
+			<file>./{{PLUGIN_SLUG}}.php</file>
+		</include>
+	</source>
+</phpunit>
