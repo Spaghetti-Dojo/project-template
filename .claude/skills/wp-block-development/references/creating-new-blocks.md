@@ -1,46 +1,72 @@
-# Creating new blocks (scaffolding)
+# Creating a new block
 
-Use this file when you are creating a new block (or a new block plugin) from scratch.
+Every file of a block lives in one directory under `sources/client/blocks/`.
+Do not use `@wordpress/create-block`. It scaffolds a `src/` directory and its
+own plugin file, which do not match this project.
 
-## Preferred path: `@wordpress/create-block`
+## Procedure
 
-`@wordpress/create-block` scaffolds a modern block setup that tends to track current best practices.
+1. Create the directory `sources/client/blocks/<name>/`.
+2. Add `block.json`. Set `"name": "{{PLUGIN_SLUG}}/<name>"`.
+3. Add the files that the block needs. Reference each one from `block.json`
+   with a path relative to the block directory.
+4. Run `pnpm build`.
+5. Add a Playwright spec in `tests/e2e/specs/`.
 
-Typical options to decide up front:
+Do not write any PHP to register the block. The `Blocks` module registers
+every block of the build directory. See `references/registration.md`.
 
-- TypeScript vs JavaScript
-- Static vs dynamic (`render.php` / server rendering)
-- Whether the block should be interactive on the frontend
+## Directory contract
 
-Canonical docs:
+```
+sources/client/blocks/<name>/
+├── block.json      metadata. The only mandatory file.
+├── render.php      the server render template, for a dynamic block
+├── view.ts         the front end script, for an interactive block
+├── types.ts        the types of the block
+└── style.scss      the styles of the block
+```
 
-- https://developer.wordpress.org/block-editor/reference-guides/packages/packages-create-block/
+`render.php` stays in this directory, next to `block.json`. `wp-scripts`
+copies it into `build/blocks/<name>/`, so the relative path stays valid.
 
-## “Most up-to-date” interactive blocks
+## Example block.json
 
-For a modern interactive block, prefer the official Interactivity API template:
+```json
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "{{PLUGIN_SLUG}}/<name>",
+	"title": "<Title>",
+	"category": "widgets",
+	"textdomain": "{{TEXT_DOMAIN}}",
+	"supports": {
+		"html": false,
+		"interactivity": true,
+		"inserter": false
+	},
+	"viewScriptModule": "file:./view.js",
+	"style": "file:./style-view.css",
+	"render": "file:./render.php"
+}
+```
 
-- Template: `@wordpress/create-block-interactive-template`
+Note the two indirections:
 
-This template is designed to integrate:
+- `viewScriptModule` points to `view.js`, the build output of `view.ts`.
+- `style` points to `style-view.css`, which `wp-scripts` emits when `view.ts`
+  imports `style.scss`. Import the stylesheet from `view.ts`.
 
-- Interactivity API directives (`data-wp-*`)
-- module-based view scripts (`viewScriptModule`)
-- server rendering (`render.php`)
+## Editor scripts
 
-References:
+`sources/client/blocks/example` ships no `editorScript`, and the example uses
+`"inserter": false`. `@wordpress/blocks` and `@wordpress/block-editor` ship no
+TypeScript types, and `pnpm lint:types` runs `tsc --noEmit` over `sources`.
 
-- https://developer.wordpress.org/block-editor/reference-guides/packages/packages-create-block/
-- https://make.wordpress.org/core/2024/03/04/a-first-look-at-the-interactivity-api-in-wordpress-6-5/
+If you need an insertable block, you must first decide how to handle those
+missing types. Ask the user before you add `@wordpress/blocks` to
+`package.json`.
 
-## Manual fallback (when scaffolding is not available)
+## Canonical docs
 
-If you cannot run `create-block` (no Node tooling or restricted network):
-
-1. Create a plugin or theme location that will register the block.
-2. Create a block folder with a valid `block.json`.
-3. Register via `register_block_type_from_metadata()` in PHP.
-4. Add editor JS and (optionally) frontend view assets.
-
-Then follow the rest of `wp-block-development` for metadata, registration, and serialization.
-
+- https://developer.wordpress.org/block-editor/reference-guides/block-api/block-metadata/

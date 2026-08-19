@@ -1,6 +1,6 @@
 ---
 name: wp-block-development
-description: "Use when developing WordPress (Gutenberg) blocks: block.json metadata, register_block_type(_from_metadata), attributes/serialization, supports, dynamic rendering (render.php/render_callback), deprecations/migrations, viewScript vs viewScriptModule, and @wordpress/scripts/@wordpress/create-block build and test workflows."
+description: "Use when developing WordPress (Gutenberg) blocks in this project: block.json metadata, the block directory contract of sources/client/blocks, collection registration through the generated manifest, attributes/serialization, supports, dynamic rendering (render.php), deprecations/migrations, viewScript vs viewScriptModule, and the pnpm build and test workflow."
 ---
 
 # WP Block Development
@@ -14,40 +14,45 @@ Use this skill for block work such as:
 - fixing “block invalid / not saving / attributes not persisting”
 - adding dynamic rendering (`render.php` / `render_callback`)
 - block deprecations and migrations (`deprecated` versions)
-- build tooling for blocks (`@wordpress/scripts`, `@wordpress/create-block`, `wp-env`)
+- build tooling for blocks (`@wordpress/scripts`, `wp-env`)
+
+## Project conventions
+
+This project has a fixed layout. It overrides any upstream advice.
+
+- Every file of a block lives in one directory under `sources/client/blocks/`,
+  `render.php` included.
+- `sources/server/Blocks/` holds the module and the registrar. Both are
+  generic. Never put block specific PHP there.
+- A new block needs no PHP. The registrar registers the whole collection of
+  `build/blocks` through the generated manifest.
+- Do not use `@wordpress/create-block`. It scaffolds a `src/` directory and
+  its own plugin file, which do not match this layout.
+- Use `pnpm`, never `npm` or `npx`.
 
 ## Inputs required
 
-- Repo root and target (plugin vs theme vs full site).
-- The block name/namespace and where it lives (path to `block.json` if known).
-- Target WordPress version range (especially if using modules / `viewScriptModule`).
+- The block name, and the block root if it exists already.
+- Target WordPress version range, especially for `viewScriptModule`.
 
 ## Procedure
 
-### 0) Triage and locate blocks
+### 0) Locate the blocks
 
-1. Run triage:
-   - `node skills/wp-project-triage/scripts/detect_wp_project.mjs`
-2. List blocks (deterministic scan):
-   - `node skills/wp-block-development/scripts/list_blocks.mjs`
-3. Identify the block root (directory containing `block.json`) you’re changing.
+Run the deterministic scan:
 
-If this repo is a full site (`wp-content/` present), be explicit about *which* plugin/theme contains the block.
+- `node .claude/skills/wp-block-development/scripts/list_blocks.mjs`
+
+It prints the root, the name and the metadata fields of every block.
 
 ### 1) Create a new block (if needed)
 
-If you are creating a new block, prefer scaffolding rather than hand-rolling structure:
-
-- Use `@wordpress/create-block` to scaffold a modern block/plugin setup.
-- If you need Interactivity API from day 1, use the interactive template.
+Create one directory under `sources/client/blocks/` and add `block.json`.
 
 Read:
 - `references/creating-new-blocks.md`
 
-After scaffolding:
-
-1. Re-run the block list script and confirm the new block root.
-2. Continue with the remaining steps (model choice, metadata, registration, serialization).
+Then re-run the scan and confirm the new block root.
 
 ### 2) Ensure apiVersion 3 (WordPress 6.9+)
 
@@ -86,15 +91,14 @@ Common pitfalls:
 - changing saved markup without adding `deprecated` causes “Invalid block”
 - adding attributes without defining source/serialization correctly causes “attribute not saving”
 
-### 5) Register the block (server-side preferred)
+### 5) Registration
 
-Prefer PHP registration using metadata, especially when:
+You do not register the block. `Blocks\BlockRegistrar` registers the whole
+collection of `build/blocks` on `init`. Run `pnpm build` and the block is
+registered.
 
-- you need dynamic rendering
-- you need translations (`wp_set_script_translations`)
-- you need conditional asset loading
-
-Read and apply:
+Read this before you change the directory layout, or when a block does not
+appear:
 - `references/registration.md`
 
 ### 6) Implement edit/save/render patterns
@@ -141,10 +145,11 @@ Read:
 
 ### 10) Tooling and verification commands
 
-Prefer whatever the repo already uses:
-
-- `@wordpress/scripts` (common) → run existing npm scripts
-- `wp-env` (common) → use for local WP + E2E
+- `pnpm build` after every change. The registrar reads `build/`, not
+  `sources/`.
+- `pnpm lint:scripts`, `pnpm lint:styles`, `pnpm lint:types`.
+- `composer cs` and `composer analysis` when you touched `render.php`.
+- `pnpm test:e2e` for the front end behaviour. It needs Docker.
 
 Read:
 - `references/tooling-and-testing.md`
@@ -155,7 +160,8 @@ Read:
 - Saving + reloading does not create “Invalid block”.
 - Frontend output matches expectations (static: saved markup; dynamic: server output).
 - Assets load where expected (editor vs frontend).
-- Run the repo’s lint/build/tests that triage recommends.
+- `pnpm build` succeeds and `build/blocks/<name>/` holds the expected files.
+- The lint, the analysis and the tests pass.
 
 ## Failure modes / debugging
 
