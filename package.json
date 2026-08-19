@@ -25,6 +25,7 @@
 	},
 	"devDependencies": {
 		"@playwright/test": "^1.59.1",
+		"@types/jest": "^30.0.0",
 		"@types/node": "^24.0.0",
 		"@wordpress/e2e-test-utils-playwright": "^1.44.0",
 		"@wordpress/env": "^10.39.0",
@@ -48,7 +49,9 @@
 		"lint:scripts:fix": "wp-scripts lint-js --fix",
 		"lint:types": "tsc --noEmit",
 		"format": "wp-scripts format",
-		"test:e2e": "playwright test",
-		"test:e2e:ui": "playwright test --ui"
+		"test:e2e": "playwright test --pass-with-no-tests",
+		"test:e2e:ui": "playwright test --ui",
+		"test:unit": "wp-scripts test-unit-js --passWithNoTests",
+		"test:unit:watch": "wp-scripts test-unit-js --watch"
 	}
 }

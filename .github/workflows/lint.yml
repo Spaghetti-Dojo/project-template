@@ -30,3 +30,6 @@ jobs:
 
       - name: Check types
         run: pnpm lint:types
+
+      - name: Unit tests
+        run: pnpm test:unit

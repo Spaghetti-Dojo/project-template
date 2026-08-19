@@ -34,9 +34,10 @@ sources/
   client/styles/mixins/_units.scss
 tests/
   {Pest.php,bootstrap-integration.php}
-  unit/server/BlocksModuleTest.php
-  integration/server/{BlockRegistrationTest.php,PackageTest.php}
-  e2e/{specs/example.spec.ts,mu-plugins/example-test-helper.php,tsconfig.json}
+  unit/server/            PHP unit tests. Empty in the template.
+  unit/client/            client unit tests. Empty in the template.
+  integration/server/PackageTest.php
+  e2e/{specs,mu-plugins,tsconfig.json}
 {{PLUGIN_SLUG}}.php             plugin bootstrap
 composer.json package.json .wp-env.json
 phpcs.xml phpstan.neon phpunit.xml phpunit-integration.xml
@@ -99,14 +100,19 @@ The block has no editor script. `@wordpress/blocks` and
 `tsc --noEmit` in CI. The block therefore uses `inserter: false`, as `tosuto`
 does. It renders through `do_blocks()` or through a template.
 
-The example gives each QA command real input:
+The template ships one integration test, for the package factory. It does not
+ship example tests for the block, because every project deletes them. Every
+test command passes on an empty directory, through
+`--do-not-fail-on-empty-test-suite` for Pest, `--passWithNoTests` for Jest and
+`--pass-with-no-tests` for Playwright.
 
-- one unit test for the module,
-- one integration test for the block registration,
-- one integration test for the package factory,
-- one Playwright spec for the rendered block.
+`docs/testing.md` replaces the example tests. It documents the four layers,
+the choice between them, and the rules of each one.
 
 ## Test harness
+
+There are four layers: PHP unit, PHP integration, client unit and end to end.
+`docs/testing.md` is the reference.
 
 Unit tests run on Brain Monkey.
 
@@ -141,7 +147,8 @@ own module or to read the container.
 - `qa.yml` — PHP 8.4 with `pdo_sqlite`, `pnpm build`, then `composer cs`,
   `composer analysis` and `composer tests`. The build must run first, because
   the integration test reads the build directory.
-- `lint.yml` — `pnpm lint:scripts`, `pnpm lint:styles`, `tsc --noEmit`.
+- `lint.yml` — `pnpm lint:scripts`, `pnpm lint:styles`, `tsc --noEmit`, and
+  the client unit tests.
 - `e2e.yml` — build, `wp-env start`, Playwright, artifact upload on failure.
 
 ## Git

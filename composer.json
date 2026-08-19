@@ -55,10 +55,10 @@
 		"cs": "phpcs",
 		"cs:fix": "phpcbf",
 		"analysis": "./vendor/bin/phpstan analyse --memory-limit=512M",
-		"test:unit": "@php ./vendor/bin/pest --testsuite=unit",
-		"test:integration": "@php ./vendor/bin/pest -c phpunit-integration.xml",
-		"test:unit:coverage": "@php ./vendor/bin/pest --testsuite=unit --coverage --coverage-clover=coverage-unit.xml",
-		"test:integration:coverage": "@php ./vendor/bin/pest -c phpunit-integration.xml --coverage --coverage-clover=coverage-integration.xml",
+		"test:unit": "@php ./vendor/bin/pest --testsuite=unit --do-not-fail-on-empty-test-suite",
+		"test:integration": "@php ./vendor/bin/pest -c phpunit-integration.xml --do-not-fail-on-empty-test-suite",
+		"test:unit:coverage": "@php ./vendor/bin/pest --testsuite=unit --do-not-fail-on-empty-test-suite --coverage --coverage-clover=coverage-unit.xml",
+		"test:integration:coverage": "@php ./vendor/bin/pest -c phpunit-integration.xml --do-not-fail-on-empty-test-suite --coverage --coverage-clover=coverage-integration.xml",
 		"tests": [
 			"@test:unit",
 			"@test:integration"
