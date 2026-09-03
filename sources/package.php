@@ -15,8 +15,12 @@ use Inpsyde\Modularity;
  * Example:
  *
  *     add_action('plugins_loaded', static function (): void {
- *         package()->addModule(MyOwn\Module::new());
+ *         $package = package();
+ *         $package->addModule(MyOwn\Module::new($package));
  *     }, 5);
+ *
+ * The module can read the properties of the plugin through
+ * `$package->properties()`, which give the base path and the base URL.
  */
 function package(): Modularity\Package
 {

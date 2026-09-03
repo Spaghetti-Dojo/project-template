@@ -116,11 +116,40 @@ third party can add its own module:
 
 ```php
 add_action('plugins_loaded', static function (): void {
-    \{{VENDOR_NAMESPACE}}\{{PLUGIN_NAMESPACE}}\package()->addModule(MyOwn\Module::new());
+    $package = \{{VENDOR_NAMESPACE}}\{{PLUGIN_NAMESPACE}}\package();
+    $package->addModule(MyOwn\Module::new($package));
 }, 5);
 ```
 
 Add the module before the priority of the `boot()` call, which is 10.
+
+The module gets the package instance, so it can read the properties of the
+plugin, such as the base path and the base URL:
+
+```php
+final class Module implements ExecutableModule
+{
+    use ModuleClassNameIdTrait;
+
+    public static function new(Package $package): self
+    {
+        return new self($package);
+    }
+
+    private function __construct(private Package $package)
+    {
+    }
+
+    public function run(ContainerInterface $container): bool
+    {
+        $properties = $this->package->properties();
+        $assetsUrl = $properties->baseUrl() . 'build/';
+        $templatePath = $properties->basePath() . 'templates/';
+
+        return true;
+    }
+}
+```
 
 ## Layout
 
