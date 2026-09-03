@@ -116,11 +116,41 @@ third party can add its own module:
 
 ```php
 add_action('plugins_loaded', static function (): void {
-    \{{VENDOR_NAMESPACE}}\{{PLUGIN_NAMESPACE}}\package()->addModule(MyOwn\Module::new());
+    $package = \{{VENDOR_NAMESPACE}}\{{PLUGIN_NAMESPACE}}\package();
+    $package->addModule(MyOwn\Module::new($package->properties()));
 }, 5);
 ```
 
 Add the module before the priority of the `boot()` call, which is 10.
+
+The module gets the properties of the plugin, so it can read the base path,
+the base URL and the other data of the plugin:
+
+```php
+use Inpsyde\Modularity\Properties\Properties;
+
+final class Module implements ExecutableModule
+{
+    use ModuleClassNameIdTrait;
+
+    public static function new(Properties $properties): self
+    {
+        return new self($properties);
+    }
+
+    private function __construct(private Properties $properties)
+    {
+    }
+
+    public function run(ContainerInterface $container): bool
+    {
+        $assetsUrl = $this->properties->baseUrl() . 'build/';
+        $templatePath = $this->properties->basePath() . 'templates/';
+
+        return true;
+    }
+}
+```
 
 ## Layout
 
