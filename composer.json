@@ -22,7 +22,7 @@
 		"mockery/mockery": "^1.6",
 		"pestphp/pest": "^v4.3.0",
 		"phpstan/phpstan": "^2.1",
-		"roots/wordpress": "6.9",
+		"roots/wordpress": "^7.1.0",
 		"syde/phpcs": "^1.0",
 		"syde/wp-phpunit-integration": "^0.4"
 	},

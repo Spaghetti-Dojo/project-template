@@ -4,7 +4,7 @@
  * Plugin Name: {{PLUGIN_NAME}}
  * Description: {{PLUGIN_DESCRIPTION}}
  * Version: 0.1.0
- * Requires at least: 6.9
+ * Requires at least: 7.1
  * Requires PHP: 8.4
  * Text Domain: {{TEXT_DOMAIN}}
  * License: GPL-2.0-or-later

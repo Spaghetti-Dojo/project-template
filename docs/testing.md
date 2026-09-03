@@ -113,7 +113,7 @@ Rules:
 Run the suite against another WordPress version:
 
 ```bash
-WP_CORE_VERSION=6.8 composer test:integration
+WP_CORE_VERSION=7.1 composer test:integration
 ```
 
 Known limit: the harness runs WP-CLI, and it treats any output on `stderr` as

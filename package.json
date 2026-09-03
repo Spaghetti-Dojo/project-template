@@ -21,7 +21,7 @@
 		"pnpm": ">=10.0.0"
 	},
 	"dependencies": {
-		"@wordpress/interactivity": "wp-6.9"
+		"@wordpress/interactivity": "wp-7.0"
 	},
 	"devDependencies": {
 		"@playwright/test": "^1.59.1",
