@@ -9,6 +9,12 @@
  * Usage:
  *   node bin/init.mjs
  *   node bin/init.mjs --dry-run
+ *   node bin/init.mjs --values answers.json --yes
+ *
+ * The `--values` file holds a JSON object. Every key is a token, without the
+ * braces. A missing token gets the same default as the interactive mode, so
+ * `{ "PLUGIN_SLUG": "my-plugin" }` is enough. With `--values` the script does
+ * not read the standard input, so an agent can run it.
  */
 
 import { createInterface } from 'node:readline/promises';
@@ -19,6 +25,23 @@ import { fileURLToPath } from 'node:url';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const DRY_RUN = argv.includes('--dry-run');
+const VALUES_FILE = readOption('--values');
+const ASSUME_YES = argv.includes('--yes') || argv.includes('-y');
+
+/**
+ * Reads the value of a `--name value` or `--name=value` option.
+ */
+function readOption(name) {
+	const index = argv.indexOf(name);
+
+	if (index !== -1) {
+		return argv[index + 1] ?? null;
+	}
+
+	const inline = argv.find((item) => item.startsWith(`${name}=`));
+
+	return inline ? inline.slice(name.length + 1) : null;
+}
 
 const SKIP_DIRS = new Set([
 	'.git',
@@ -38,6 +61,22 @@ const BINARY_EXTENSIONS = new Set([
 ]);
 
 const REMOVE_AFTER_INIT = ['bin', join('docs', 'superpowers')];
+
+const TOKENS = [
+	'PLUGIN_NAME',
+	'PLUGIN_SLUG',
+	'PLUGIN_DESCRIPTION',
+	'VENDOR_NAMESPACE',
+	'PLUGIN_NAMESPACE',
+	'COMPOSER_NAME',
+	'NPM_NAME',
+	'TEXT_DOMAIN',
+	'AUTHOR_NAME',
+	'AUTHOR_EMAIL',
+	'GITHUB_OWNER',
+	'GITHUB_REPO',
+	'CODEOWNER',
+];
 
 /**
  * Turns "my-plugin" into "My Plugin".
@@ -66,6 +105,13 @@ function toSlug(value) {
 		.toLowerCase()
 		.replace(/[^a-z0-9]+/g, '-')
 		.replace(/^-+|-+$/g, '');
+}
+
+/**
+ * Turns "SpaghettiDojo" into "spaghetti-dojo".
+ */
+function toKebab(value) {
+	return toSlug(value.replace(/([a-z0-9])([A-Z])/g, '$1-$2'));
 }
 
 async function collectFiles(dir, files = []) {
@@ -131,28 +177,75 @@ async function ask(lines, question, fallback) {
 	return answer === '' ? fallback : answer;
 }
 
+/**
+ * Builds the default value of every token from the answers that are present.
+ */
+function withDefaults(answers) {
+	const slug = toSlug(answers.PLUGIN_SLUG || basename(cwd()));
+	const vendorNamespace = answers.VENDOR_NAMESPACE || 'SpaghettiDojo';
+	const vendorSlug = toKebab(vendorNamespace);
+
+	return {
+		PLUGIN_NAME: answers.PLUGIN_NAME || toTitle(slug),
+		PLUGIN_SLUG: slug,
+		PLUGIN_DESCRIPTION: answers.PLUGIN_DESCRIPTION || 'A WordPress plugin.',
+		VENDOR_NAMESPACE: vendorNamespace,
+		PLUGIN_NAMESPACE: answers.PLUGIN_NAMESPACE || toPascal(slug),
+		COMPOSER_NAME: answers.COMPOSER_NAME || `${vendorSlug}/${slug}`,
+		NPM_NAME: answers.NPM_NAME || `@${vendorSlug}/${slug}`,
+		TEXT_DOMAIN: answers.TEXT_DOMAIN || slug,
+		AUTHOR_NAME: answers.AUTHOR_NAME || 'guido scialfa',
+		AUTHOR_EMAIL: answers.AUTHOR_EMAIL || 'dev@guidoscialfa.com',
+		GITHUB_OWNER: answers.GITHUB_OWNER || 'Spaghetti-Dojo',
+		GITHUB_REPO: answers.GITHUB_REPO || slug,
+		CODEOWNER: answers.CODEOWNER || '@widoz',
+	};
+}
+
+/**
+ * Reads the answers from the `--values` file.
+ */
+async function valuesFromFile(path) {
+	const raw = await readFile(path, 'utf8');
+	const answers = JSON.parse(raw);
+
+	if (answers === null || typeof answers !== 'object' || Array.isArray(answers)) {
+		throw new Error(`${path} must hold a JSON object.`);
+	}
+
+	const unknown = Object.keys(answers).filter((key) => !TOKENS.includes(key));
+
+	if (unknown.length > 0) {
+		throw new Error(`Unknown token: ${unknown.join(', ')}`);
+	}
+
+	return withDefaults(answers);
+}
+
 async function collectValues() {
 	const rl = createInterface({ input: stdin, output: stdout });
 	const lines = rl[Symbol.asyncIterator]();
 
 	try {
-		const dirSlug = toSlug(basename(cwd()));
-		const slug = await ask(lines, 'Plugin slug', dirSlug);
-		const name = await ask(lines, 'Plugin name', toTitle(slug));
-		const description = await ask(lines, 'Description', 'A WordPress plugin.');
-		const vendorNamespace = await ask(lines, 'Vendor namespace', 'SpaghettiDojo');
-		const pluginNamespace = await ask(lines, 'Plugin namespace', toPascal(slug));
-		const vendorSlug = toSlug(vendorNamespace);
-		const composerName = await ask(lines, 'Composer name', `${vendorSlug}/${slug}`);
-		const npmName = await ask(lines, 'NPM name', `@${vendorSlug}/${slug}`);
-		const textDomain = await ask(lines, 'Text domain', slug);
-		const authorName = await ask(lines, 'Author name', 'guido scialfa');
-		const authorEmail = await ask(lines, 'Author email', 'dev@guidoscialfa.com');
-		const githubOwner = await ask(lines, 'GitHub owner', 'Spaghetti-Dojo');
-		const githubRepo = await ask(lines, 'GitHub repository', slug);
-		const codeowner = await ask(lines, 'Code owner', '@widoz');
+		const fallback = withDefaults({});
+		const slug = toSlug(await ask(lines, 'Plugin slug', fallback.PLUGIN_SLUG));
+		const step = (answers) => withDefaults({ ...answers, PLUGIN_SLUG: slug });
 
-		const values = {
+		const name = await ask(lines, 'Plugin name', step({}).PLUGIN_NAME);
+		const description = await ask(lines, 'Description', fallback.PLUGIN_DESCRIPTION);
+		const vendorNamespace = await ask(lines, 'Vendor namespace', fallback.VENDOR_NAMESPACE);
+		const derived = step({ VENDOR_NAMESPACE: vendorNamespace });
+		const pluginNamespace = await ask(lines, 'Plugin namespace', derived.PLUGIN_NAMESPACE);
+		const composerName = await ask(lines, 'Composer name', derived.COMPOSER_NAME);
+		const npmName = await ask(lines, 'NPM name', derived.NPM_NAME);
+		const textDomain = await ask(lines, 'Text domain', derived.TEXT_DOMAIN);
+		const authorName = await ask(lines, 'Author name', fallback.AUTHOR_NAME);
+		const authorEmail = await ask(lines, 'Author email', fallback.AUTHOR_EMAIL);
+		const githubOwner = await ask(lines, 'GitHub owner', fallback.GITHUB_OWNER);
+		const githubRepo = await ask(lines, 'GitHub repository', derived.GITHUB_REPO);
+		const codeowner = await ask(lines, 'Code owner', fallback.CODEOWNER);
+
+		const values = withDefaults({
 			PLUGIN_NAME: name,
 			PLUGIN_SLUG: slug,
 			PLUGIN_DESCRIPTION: description,
@@ -166,7 +259,7 @@ async function collectValues() {
 			GITHUB_OWNER: githubOwner,
 			GITHUB_REPO: githubRepo,
 			CODEOWNER: codeowner,
-		};
+		});
 
 		stdout.write('\nSummary\n');
 		for (const [token, value] of Object.entries(values)) {
@@ -230,11 +323,25 @@ async function main() {
 	DRY_RUN && stdout.write('Dry run. No file is written.\n');
 	stdout.write('\n');
 
-	const values = await collectValues();
+	const values = VALUES_FILE
+		? await valuesFromFile(VALUES_FILE)
+		: await collectValues();
 
 	if (!values) {
 		stdout.write('Cancelled. No file changed.\n');
 		exit(1);
+	}
+
+	if (VALUES_FILE) {
+		stdout.write('Values\n');
+		for (const [token, value] of Object.entries(values)) {
+			stdout.write(`  ${token.padEnd(20)} ${value}\n`);
+		}
+
+		if (!ASSUME_YES && !DRY_RUN) {
+			stdout.write('\nAdd --yes to apply these values.\n');
+			exit(1);
+		}
 	}
 
 	stdout.write('\n');
