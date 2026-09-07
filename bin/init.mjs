@@ -15,9 +15,14 @@
  * braces. A missing token gets the same default as the interactive mode, so
  * `{ "PLUGIN_SLUG": "my-plugin" }` is enough. With `--values` the script does
  * not read the standard input, so an agent can run it.
+ *
+ * AUTHOR_NAME and AUTHOR_EMAIL are mandatory. They come from `git config`.
+ * If git does not hold them, the interactive mode asks for them, and the
+ * `--values` mode stops.
  */
 
 import { createInterface } from 'node:readline/promises';
+import { execFileSync } from 'node:child_process';
 import { stdin, stdout, exit, argv, cwd } from 'node:process';
 import { readdir, readFile, writeFile, rename, rm, rmdir, stat } from 'node:fs/promises';
 import { join, relative, basename, dirname, extname } from 'node:path';
@@ -78,6 +83,8 @@ const TOKENS = [
 	'CODEOWNER',
 ];
 
+const REQUIRED_TOKENS = ['AUTHOR_NAME', 'AUTHOR_EMAIL'];
+
 /**
  * Turns "my-plugin" into "My Plugin".
  */
@@ -105,6 +112,47 @@ function toSlug(value) {
 		.toLowerCase()
 		.replace(/[^a-z0-9]+/g, '-')
 		.replace(/^-+|-+$/g, '');
+}
+
+/**
+ * Reads one value of the git configuration. Returns an empty string when git
+ * is absent, or when the key has no value.
+ */
+function gitConfig(key) {
+	try {
+		return execFileSync('git', ['config', '--get', key], {
+			encoding: 'utf8',
+			stdio: ['ignore', 'pipe', 'ignore'],
+		}).trim();
+	} catch {
+		return '';
+	}
+}
+
+/**
+ * Stops the script when a mandatory token has no value.
+ */
+function assertRequired(values) {
+	const missing = REQUIRED_TOKENS.filter((token) => !values[token]);
+
+	if (missing.length > 0) {
+		throw new Error(
+			`Missing mandatory token: ${missing.join(', ')}. ` +
+				'Configure git with `git config user.name` and `git config user.email`, ' +
+				'or put AUTHOR_NAME and AUTHOR_EMAIL in the values file.'
+		);
+	}
+
+	if (!isEmail(values.AUTHOR_EMAIL)) {
+		throw new Error(`AUTHOR_EMAIL is not an email address: ${values.AUTHOR_EMAIL}`);
+	}
+}
+
+/**
+ * Checks the shape of an email address.
+ */
+function isEmail(value) {
+	return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
 }
 
 /**
@@ -162,12 +210,16 @@ function stripTemplateSection(content) {
 }
 
 async function ask(lines, question, fallback) {
-	stdout.write(`${question} [${fallback}]: `);
+	stdout.write(fallback ? `${question} [${fallback}]: ` : `${question}: `);
 
 	const { value, done } = await lines.next();
 
 	if (done) {
 		stdout.write('\n');
+
+		if (!fallback) {
+			throw new Error(`${question} has no answer, and it is mandatory.`);
+		}
 
 		return fallback;
 	}
@@ -175,6 +227,27 @@ async function ask(lines, question, fallback) {
 	const answer = String(value).trim();
 
 	return answer === '' ? fallback : answer;
+}
+
+/**
+ * Asks the same question until the answer is present and valid.
+ */
+async function askRequired(lines, question, fallback, validate) {
+	for (;;) {
+		const answer = await ask(lines, question, fallback);
+
+		if (answer === '') {
+			stdout.write('  This value is mandatory.\n');
+			continue;
+		}
+
+		if (validate && !validate(answer)) {
+			stdout.write('  This value has the wrong format.\n');
+			continue;
+		}
+
+		return answer;
+	}
 }
 
 /**
@@ -194,8 +267,8 @@ function withDefaults(answers) {
 		COMPOSER_NAME: answers.COMPOSER_NAME || `${vendorSlug}/${slug}`,
 		NPM_NAME: answers.NPM_NAME || `@${vendorSlug}/${slug}`,
 		TEXT_DOMAIN: answers.TEXT_DOMAIN || slug,
-		AUTHOR_NAME: answers.AUTHOR_NAME || 'guido scialfa',
-		AUTHOR_EMAIL: answers.AUTHOR_EMAIL || 'dev@guidoscialfa.com',
+		AUTHOR_NAME: answers.AUTHOR_NAME || gitConfig('user.name'),
+		AUTHOR_EMAIL: answers.AUTHOR_EMAIL || gitConfig('user.email'),
 		GITHUB_OWNER: answers.GITHUB_OWNER || 'Spaghetti-Dojo',
 		GITHUB_REPO: answers.GITHUB_REPO || slug,
 		CODEOWNER: answers.CODEOWNER || '@widoz',
@@ -239,8 +312,13 @@ async function collectValues() {
 		const composerName = await ask(lines, 'Composer name', derived.COMPOSER_NAME);
 		const npmName = await ask(lines, 'NPM name', derived.NPM_NAME);
 		const textDomain = await ask(lines, 'Text domain', derived.TEXT_DOMAIN);
-		const authorName = await ask(lines, 'Author name', fallback.AUTHOR_NAME);
-		const authorEmail = await ask(lines, 'Author email', fallback.AUTHOR_EMAIL);
+		const authorName = await askRequired(lines, 'Author name', fallback.AUTHOR_NAME);
+		const authorEmail = await askRequired(
+			lines,
+			'Author email',
+			fallback.AUTHOR_EMAIL,
+			isEmail
+		);
 		const githubOwner = await ask(lines, 'GitHub owner', fallback.GITHUB_OWNER);
 		const githubRepo = await ask(lines, 'GitHub repository', derived.GITHUB_REPO);
 		const codeowner = await ask(lines, 'Code owner', fallback.CODEOWNER);
@@ -326,6 +404,8 @@ async function main() {
 	const values = VALUES_FILE
 		? await valuesFromFile(VALUES_FILE)
 		: await collectValues();
+
+	values && assertRequired(values);
 
 	if (!values) {
 		stdout.write('Cancelled. No file changed.\n');

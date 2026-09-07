@@ -15,6 +15,10 @@ The script asks for the plugin name, the slug, the namespaces and the author.
 It then replaces every token, renames the tokenized files, and removes itself.
 Use `node bin/init.mjs --dry-run` to see the changes without writing them.
 
+The author name and the author email are mandatory. The script reads them from
+`git config user.name` and `git config user.email`. If git does not hold them,
+the script asks for them, and it does not continue without an answer.
+
 ### With Claude Code
 
 A Claude Code plugin asks the same questions inside the harness. It lives in
@@ -41,6 +45,9 @@ node bin/init.mjs --values values.json --dry-run
 node bin/init.mjs --values values.json --yes
 ```
 
+This mode does not ask, so it stops when the author name or the author email
+is absent from both the file and `git config`.
+
 Write `values.json` outside the repository, or remove it after the run. The
 script does not remove it.
 
@@ -56,8 +63,8 @@ The tokens are:
 | `{{COMPOSER_NAME}}` | spaghetti-dojo/my-plugin |
 | `{{NPM_NAME}}` | @spaghetti-dojo/my-plugin |
 | `{{TEXT_DOMAIN}}` | my-plugin |
-| `{{AUTHOR_NAME}}` | guido scialfa |
-| `{{AUTHOR_EMAIL}}` | dev@guidoscialfa.com |
+| `{{AUTHOR_NAME}}` | `git config user.name`, mandatory |
+| `{{AUTHOR_EMAIL}}` | `git config user.email`, mandatory |
 | `{{GITHUB_OWNER}}` | Spaghetti-Dojo |
 | `{{GITHUB_REPO}}` | my-plugin |
 | `{{CODEOWNER}}` | @widoz |
