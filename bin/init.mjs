@@ -14,6 +14,7 @@
 import { createInterface } from 'node:readline/promises';
 import { stdin, stdout, exit, argv, cwd } from 'node:process';
 import { readdir, readFile, writeFile, rename, rm, rmdir, stat } from 'node:fs/promises';
+import { execFileSync } from 'node:child_process';
 import { join, relative, basename, dirname, extname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -115,6 +116,14 @@ function stripTemplateSection(content) {
 	return [...lines.slice(0, start), ...lines.slice(end)].join('\n');
 }
 
+function gitConfig(key) {
+	try {
+		return execFileSync('git', ['config', '--get', key], { encoding: 'utf8' }).trim();
+	} catch {
+		return '';
+	}
+}
+
 async function ask(lines, question, fallback) {
 	stdout.write(`${question} [${fallback}]: `);
 
@@ -146,11 +155,10 @@ async function collectValues() {
 		const composerName = await ask(lines, 'Composer name', `${vendorSlug}/${slug}`);
 		const npmName = await ask(lines, 'NPM name', `@${vendorSlug}/${slug}`);
 		const textDomain = await ask(lines, 'Text domain', slug);
-		const authorName = await ask(lines, 'Author name', 'guido scialfa');
-		const authorEmail = await ask(lines, 'Author email', 'dev@guidoscialfa.com');
-		const githubOwner = await ask(lines, 'GitHub owner', 'Spaghetti-Dojo');
+		const authorName = await ask(lines, 'Author name', gitConfig('user.name') || vendorNamespace);
+		const authorEmail = await ask(lines, 'Author email', gitConfig('user.email') || `dev@${vendorSlug}.com`);
+		const githubOwner = await ask(lines, 'GitHub owner', vendorSlug);
 		const githubRepo = await ask(lines, 'GitHub repository', slug);
-		const codeowner = await ask(lines, 'Code owner', '@widoz');
 
 		const values = {
 			PLUGIN_NAME: name,
@@ -165,7 +173,6 @@ async function collectValues() {
 			AUTHOR_EMAIL: authorEmail,
 			GITHUB_OWNER: githubOwner,
 			GITHUB_REPO: githubRepo,
-			CODEOWNER: codeowner,
 		};
 
 		stdout.write('\nSummary\n');
