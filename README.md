@@ -15,6 +15,35 @@ The script asks for the plugin name, the slug, the namespaces and the author.
 It then replaces every token, renames the tokenized files, and removes itself.
 Use `node bin/init.mjs --dry-run` to see the changes without writing them.
 
+### With Claude Code
+
+A Claude Code plugin asks the same questions inside the harness. It lives in
+[Spaghetti-Dojo/ai-dojo](https://github.com/Spaghetti-Dojo/ai-dojo). Install it
+one time:
+
+```
+/plugin marketplace add Spaghetti-Dojo/ai-dojo
+/plugin install wp-plugin-scaffolder@ai-dojo
+```
+
+Then ask Claude to scaffold the plugin. The `scaffold-wp-plugin` skill asks the
+questions, shows a dry run, and applies the values after your confirmation.
+The plugin stays installed, so it also serves the next repository.
+
+### Without a terminal prompt
+
+The script also reads the answers from a JSON file. Every key is a token
+without the braces, and every missing token gets its default:
+
+```bash
+echo '{ "PLUGIN_SLUG": "my-plugin", "VENDOR_NAMESPACE": "SpaghettiDojo" }' > values.json
+node bin/init.mjs --values values.json --dry-run
+node bin/init.mjs --values values.json --yes
+```
+
+Write `values.json` outside the repository, or remove it after the run. The
+script does not remove it.
+
 The tokens are:
 
 | Token | Example |
