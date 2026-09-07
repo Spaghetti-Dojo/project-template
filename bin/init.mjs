@@ -140,6 +140,48 @@ async function ask(lines, question, fallback) {
 	return answer === '' ? fallback : answer;
 }
 
+/**
+ * Asks a question that the user must answer.
+ *
+ * The initial value comes from the git config. The question repeats until the
+ * answer passes the validator.
+ */
+async function askRequired(lines, question, initial, isValid) {
+	const fallback = isValid(initial) ? initial : '';
+
+	for (;;) {
+		stdout.write(fallback === '' ? `${question}: ` : `${question} [${fallback}]: `);
+
+		const { value, done } = await lines.next();
+
+		if (done) {
+			if (fallback !== '') {
+				stdout.write('\n');
+
+				return fallback;
+			}
+
+			throw new Error(`${question} is mandatory. Configure git, or answer the question.`);
+		}
+
+		const answer = String(value).trim() || fallback;
+
+		if (isValid(answer)) {
+			return answer;
+		}
+
+		stdout.write(`  ${question} is mandatory. Give a valid value.\n`);
+	}
+}
+
+function isName(value) {
+	return value.trim() !== '';
+}
+
+function isEmail(value) {
+	return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value.trim());
+}
+
 async function collectValues() {
 	const rl = createInterface({ input: stdin, output: stdout });
 	const lines = rl[Symbol.asyncIterator]();
@@ -155,8 +197,8 @@ async function collectValues() {
 		const composerName = await ask(lines, 'Composer name', `${vendorSlug}/${slug}`);
 		const npmName = await ask(lines, 'NPM name', `@${vendorSlug}/${slug}`);
 		const textDomain = await ask(lines, 'Text domain', slug);
-		const authorName = await ask(lines, 'Author name', gitConfig('user.name') || vendorNamespace);
-		const authorEmail = await ask(lines, 'Author email', gitConfig('user.email') || `dev@${vendorSlug}.com`);
+		const authorName = await askRequired(lines, 'Author name', gitConfig('user.name'), isName);
+		const authorEmail = await askRequired(lines, 'Author email', gitConfig('user.email'), isEmail);
 		const githubOwner = await ask(lines, 'GitHub owner', vendorSlug);
 		const githubRepo = await ask(lines, 'GitHub repository', slug);
 

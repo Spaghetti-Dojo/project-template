@@ -15,6 +15,10 @@ The script asks for the plugin name, the slug, the namespaces and the author.
 It then replaces every token, renames the tokenized files, and removes itself.
 Use `node bin/init.mjs --dry-run` to see the changes without writing them.
 
+The author name and the author email are mandatory. The script reads them from
+`git config user.name` and `git config user.email`. If git does not hold them,
+the script asks for them and does not continue until you give a valid value.
+
 The tokens are:
 
 | Token | Example |
