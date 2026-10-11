@@ -38,7 +38,7 @@ const BINARY_EXTENSIONS = new Set([
 	'.zip', '.gz', '.pdf', '.mo', '.mp4', '.webm',
 ]);
 
-const REMOVE_AFTER_INIT = ['bin', join('docs', 'superpowers')];
+const REMOVE_AFTER_INIT = ['bin'];
 
 /**
  * Turns "my-plugin" into "My Plugin".
