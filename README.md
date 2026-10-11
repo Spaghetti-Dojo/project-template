@@ -15,6 +15,10 @@ The script asks for the plugin name, the slug, the namespaces and the author.
 It then replaces every token, renames the tokenized files, and removes itself.
 Use `node bin/init.mjs --dry-run` to see the changes without writing them.
 
+The author name and the author email are mandatory. The script reads them from
+`git config user.name` and `git config user.email`. If git does not hold them,
+the script asks for them and does not continue until you give a valid value.
+
 The tokens are:
 
 | Token | Example |
@@ -27,11 +31,10 @@ The tokens are:
 | `{{COMPOSER_NAME}}` | spaghetti-dojo/my-plugin |
 | `{{NPM_NAME}}` | @spaghetti-dojo/my-plugin |
 | `{{TEXT_DOMAIN}}` | my-plugin |
-| `{{AUTHOR_NAME}}` | guido scialfa |
-| `{{AUTHOR_EMAIL}}` | dev@guidoscialfa.com |
+| `{{AUTHOR_NAME}}` | Jane Doe |
+| `{{AUTHOR_EMAIL}}` | jane@example.com |
 | `{{GITHUB_OWNER}}` | Spaghetti-Dojo |
 | `{{GITHUB_REPO}}` | my-plugin |
-| `{{CODEOWNER}}` | @widoz |
 
 The template ships one example block. The block has `inserter: false`, so it
 does not appear in the editor. It renders on the front end through

@@ -23,7 +23,7 @@ output, lock files or vendor directories.
 .claude/                        agents, commands/opsx, hooks/qa.sh, rules,
                                 skills, settings.json, CLAUDE.md
 .github/
-  CODEOWNERS                    {{CODEOWNER}}
+  CODEOWNERS                    @Spaghetti-Dojo/maintainers
   git-commit-instructions.md
   workflows/{qa.yml,lint.yml,e2e.yml}
 bin/init.mjs                    token replacement, removes itself
@@ -59,11 +59,10 @@ babel.config.js LICENSE README.md
 | `{{COMPOSER_NAME}}` | spaghetti-dojo/my-plugin |
 | `{{NPM_NAME}}` | @spaghetti-dojo/my-plugin |
 | `{{TEXT_DOMAIN}}` | my-plugin |
-| `{{AUTHOR_NAME}}` | guido scialfa |
-| `{{AUTHOR_EMAIL}}` | dev@guidoscialfa.com |
+| `{{AUTHOR_NAME}}` | Jane Doe |
+| `{{AUTHOR_EMAIL}}` | jane@example.com |
 | `{{GITHUB_OWNER}}` | Spaghetti-Dojo |
 | `{{GITHUB_REPO}}` | my-plugin |
-| `{{CODEOWNER}}` | @widoz |
 
 The PHP namespace is `{{VENDOR_NAMESPACE}}\{{PLUGIN_NAMESPACE}}`.
 

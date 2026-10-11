@@ -3,6 +3,7 @@
 /**
  * Plugin Name: {{PLUGIN_NAME}}
  * Description: {{PLUGIN_DESCRIPTION}}
+ * Author: {{AUTHOR_NAME}}
  * Version: 0.1.0
  * Requires at least: 7.1
  * Requires PHP: 8.4
