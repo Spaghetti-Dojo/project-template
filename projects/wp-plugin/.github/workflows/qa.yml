@@ -26,8 +26,6 @@ jobs:
           node-version: '24'
           cache: 'pnpm'
 
-      - uses: ./.github/actions/init-template
-
       - name: Install dependencies
         run: composer install --no-interaction --prefer-dist
 

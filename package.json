@@ -1,57 +1,15 @@
 {
-	"name": "{{NPM_NAME}}",
-	"version": "0.1.0",
-	"description": "{{PLUGIN_DESCRIPTION}}",
-	"author": "{{AUTHOR_NAME}} <{{AUTHOR_EMAIL}}>",
+	"name": "@spaghetti-dojo/project-template",
+	"private": true,
+	"description": "Tests for the project templates.",
 	"license": "GPL-2.0-or-later",
-	"keywords": [
-		"wordpress"
-	],
-	"repository": {
-		"type": "git",
-		"url": "https://github.com/{{GITHUB_OWNER}}/{{GITHUB_REPO}}"
-	},
-	"bugs": {
-		"url": "https://github.com/{{GITHUB_OWNER}}/{{GITHUB_REPO}}/issues"
-	},
-	"homepage": "",
+	"type": "module",
 	"packageManager": "pnpm@10.33.0",
 	"engines": {
-		"node": ">=24.0.0",
-		"pnpm": ">=10.0.0"
-	},
-	"dependencies": {
-		"@wordpress/interactivity": "wp-7.0"
-	},
-	"devDependencies": {
-		"@playwright/test": "^1.59.1",
-		"@types/jest": "^30.0.0",
-		"@types/node": "^24.0.0",
-		"@wordpress/e2e-test-utils-playwright": "^1.44.0",
-		"@wordpress/env": "^10.39.0",
-		"@wordpress/prettier-config": "^4.39.0",
-		"@wordpress/scripts": "^31.4.0",
-		"clean-webpack-plugin": "^4.0.0",
-		"sass": "^1.83.0",
-		"stylelint-plugin-logical-css": "^2.0.2",
-		"ts-node": "^10.9.2",
-		"typescript": "~5.9.0"
+		"node": ">=24.0.0"
 	},
 	"scripts": {
-		"init:template": "node bin/init.mjs",
-		"wp-env": "wp-env",
-		"start": "WP_SOURCE_PATH=sources/client WP_EXPERIMENTAL_MODULES=true WP_BLOCKS_MANIFEST=true wp-scripts start",
-		"build": "WP_SOURCE_PATH=sources/client WP_EXPERIMENTAL_MODULES=true WP_BLOCKS_MANIFEST=true wp-scripts build",
-		"build:dev": "WP_SOURCE_PATH=sources/client WP_EXPERIMENTAL_MODULES=true WP_BLOCKS_MANIFEST=true wp-scripts start",
-		"lint:styles": "wp-scripts lint-style",
-		"lint:styles:fix": "wp-scripts lint-style --fix",
-		"lint:scripts": "wp-scripts lint-js",
-		"lint:scripts:fix": "wp-scripts lint-js --fix",
-		"lint:types": "tsc --noEmit",
-		"format": "wp-scripts format",
-		"test:e2e": "playwright test --pass-with-no-tests",
-		"test:e2e:ui": "playwright test --ui",
-		"test:unit": "wp-scripts test-unit-js --passWithNoTests",
-		"test:unit:watch": "wp-scripts test-unit-js --watch"
+		"test": "node --test \"tests/*/scaffold.test.mjs\"",
+		"test:install": "node --test \"tests/*/install.test.mjs\""
 	}
 }

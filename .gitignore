@@ -1,59 +1,7 @@
-# AI
-.sisyphus
-graphify-out/*
-!graphify-out/GRAPH_REPORT.md
-!graphify-out/graph.html
-!graphify-out/graph.json
+# IDE
+.idea/
+.vscode/
+.DS_Store
 
 # Node
 node_modules/
-npm-debug.log
-yarn-error.log
-
-# Build
-/dist/
-/build/
-*.map
-
-# IDE
-.vscode/
-.idea/
-*.sublime-project
-*.sublime-workspace
-.DS_Store
-Thumbs.db
-
-# Logs
-*.log
-logs/
-
-# Environment
-.env
-.env.local
-
-# Compiled
-*.css.map
-*.js.map
-
-# Package manager
-package-lock.json
-yarn.lock
-
-# Composer
-/vendor/
-
-# WordPress Environment
-/.wordpress-org/
-/.wp-env/
-
-# Testing
-artifacts/
-/coverage/
-/.phpunit.cache/
-coverage.xml
-
-# Temporary files
-*.tmp
-*.swp
-*.swo
-*~

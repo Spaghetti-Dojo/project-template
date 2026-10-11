@@ -38,7 +38,9 @@ const BINARY_EXTENSIONS = new Set([
 	'.zip', '.gz', '.pdf', '.mo', '.mp4', '.webm',
 ]);
 
-const REMOVE_AFTER_INIT = ['bin', join('docs', 'superpowers')];
+const REMOVE_AFTER_INIT = ['bin'];
+
+const REMOVE_SCRIPTS = ['init:template'];
 
 /**
  * Turns "my-plugin" into "My Plugin".
@@ -114,6 +116,19 @@ function stripTemplateSection(content) {
 	}
 
 	return [...lines.slice(0, start), ...lines.slice(end)].join('\n');
+}
+
+/**
+ * Removes the scripts of package.json that start the initializer.
+ */
+function stripTemplateScripts(content) {
+	const manifest = JSON.parse(content);
+
+	for (const script of REMOVE_SCRIPTS) {
+		delete manifest.scripts?.[script];
+	}
+
+	return `${JSON.stringify(manifest, null, '\t')}\n`;
 }
 
 function gitConfig(key) {
@@ -239,6 +254,10 @@ async function applyValues(values) {
 
 		if (basename(file) === 'README.md') {
 			next = stripTemplateSection(next);
+		}
+
+		if (relative(ROOT, file) === 'package.json') {
+			next = stripTemplateScripts(next);
 		}
 
 		if (next !== original) {
