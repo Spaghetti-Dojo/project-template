@@ -1,0 +1,47 @@
+name: Templates
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+jobs:
+  scaffold:
+    name: Initializer
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+
+      - name: Test the initializer
+        run: pnpm test
+
+  install:
+    name: Installation
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+          extensions: pdo_sqlite
+          coverage: none
+          tools: composer
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: 'pnpm'
+          cache-dependency-path: projects/*/pnpm-lock.yaml
+
+      - name: Test the installation of an initialized copy
+        run: pnpm test:install

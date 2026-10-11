@@ -24,6 +24,13 @@ node bin/init.mjs
 The copy has no git history. The `README.md` of the template describes the
 initializer.
 
+While this repository is private, `tiged` needs the SSH address and the git
+mode:
+
+```bash
+npx tiged --mode=git git@github.com:Spaghetti-Dojo/project-template/projects/wp-plugin my-plugin
+```
+
 Do not use the "Use this template" button of GitHub. It copies the full
 repository, not one template.
 
@@ -37,3 +44,16 @@ replaces them.
 This repository runs no CI for the templates. The workflows in
 `projects/*/.github/workflows/` start to run only in a project that you create
 from the template.
+
+## Test a template
+
+The tests in `tests/` copy a template into a temporary directory, as a user
+does, and run the initializer with dummy values.
+
+| Command             | What it does                                                                                      | Needs                                                  |
+|---------------------|---------------------------------------------------------------------------------------------------|--------------------------------------------------------|
+| `pnpm test`         | Tests the initializer: the tokens, the file names, the defaults and the errors.                   | Node 24                                                |
+| `pnpm test:install` | Installs the dependencies of an initialized copy, then runs its build, its linters and its tests. | Node 24, pnpm, PHP 8.4, Composer, a network connection |
+
+The tests have no dependencies, so you do not need to install anything in the
+root.
