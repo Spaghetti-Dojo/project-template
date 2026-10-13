@@ -6,9 +6,42 @@ paths:
 
 # TypeScript Instructions
 
-## Naming Conventions
+## Module-Level Functions
 
-### Methods and Functions
+Declare every module-level function with the `function` keyword. Do not assign
+an arrow function to a module-level `const`.
+
+A function declaration is hoisted. Put the exported functions first, and put
+the internal helpers below them. A reader then sees the public API of the
+module before its details.
+
+```ts
+// Good
+export function computeSeatReport( logins: string[] ): SeatReport {
+	return summarize( normalize( logins ) );
+}
+
+function normalize( logins: string[] ): string[] {
+	return logins.map( ( login ) => login.trim().toLowerCase() );
+}
+
+// Bad
+const normalize = ( logins: string[] ): string[] =>
+	logins.map( ( login ) => login.trim().toLowerCase() );
+
+export const computeSeatReport = ( logins: string[] ): SeatReport =>
+	summarize( normalize( logins ) );
+```
+
+The rule does not apply to:
+
+- callbacks and inline functions, for example `map( ( login ) => … )`, or a
+  `run` property of an object;
+- class methods;
+- constants that are not functions. Keep them at the top of the module,
+  because they are not hoisted.
+
+## Getters
 
 **Do not use `get` prefix for method names.** This is a JavaScript/TypeScript convention that should be avoided in this project.
 
